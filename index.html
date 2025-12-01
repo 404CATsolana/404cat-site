@@ -407,12 +407,22 @@
     /* Scroll typing */
     .animate-line {
       opacity: 0;
-      transform: translateY(2px);
+      max-width: 0;
+      overflow: hidden;
+      white-space: pre-wrap;
     }
+
     .animate-line.visible {
       opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.16s linear, transform 0.16s linear;
+    }
+
+    .animate-line.typing {
+      animation: typeLine 0.9s steps(55, end) forwards;
+    }
+
+    @keyframes typeLine {
+      from { max-width: 0; }
+      to { max-width: 80ch; }
     }
 
     /* Vintage CRT theme */
@@ -462,21 +472,11 @@
       background: #bbf7d0;
     }
 
-    /* CLI input (hidden, but used to trigger keyboard) */
-    #cli-input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-      height: 0;
-      width: 0;
-    }
-
-    #cli-line {
-      cursor: text;
-    }
-
-    #cli-output {
-      margin-top: 4px;
+    /* CLI editable span */
+    #cli-echo {
+      outline: none;
+      min-width: 3px;
+      display: inline-block;
     }
   </style>
 </head>
@@ -516,23 +516,22 @@
 &gt; cli_hint = type <span class="ansi-cyan">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern)
       </div>
       <div class="line" id="cli-line">
-        <span class="prompt">sol@node:~$</span>
-        <span id="cli-echo"></span><span class="cursor"></span>
+        <span class="prompt">sol@node:~$ </span>
+        <span
+          id="cli-echo"
+          contenteditable="true"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+        ></span><span class="cursor"></span>
       </div>
       <div class="line output-soft" id="cli-output"></div>
-      <input
-        id="cli-input"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="none"
-        spellcheck="false"
-      />
 
-      <!-- BOOT STATUS (SCROLL TYPED) -->
+      <!-- BOOT STATUS (SCROLL + TYPING) -->
       <div class="section-block" style="margin-top:10px;">
         <div class="line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">cat /sys/status</span>
+          <span class="cmd"> cat /sys/status</span>
         </div>
         <div class="line output animate-line">
 &gt; build_id      = v0.0.1-pre
@@ -552,7 +551,7 @@
 
         <div class="line animate-line" style="margin-top:8px;">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">sys.ping 404cat</span>
+          <span class="cmd"> sys.ping 404cat</span>
         </div>
         <div class="line output animate-line">
 &gt; signal   = <span class="ansi-green">online</span>
@@ -569,7 +568,7 @@
 
         <div class="line animate-line" style="margin-top:4px;">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">echo "404: cat_not_found, operator located"</span>
+          <span class="cmd"> echo "404: cat_not_found, operator located"</span>
         </div>
         <div class="line output-soft animate-line">
 &gt; 404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
@@ -580,7 +579,7 @@
       <div class="section-block" id="about">
         <div class="section-title-line line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">cat /about</span>
+          <span class="cmd"> cat /about</span>
         </div>
         <div class="two-col">
           <div>
@@ -618,7 +617,7 @@
       <div class="section-block" id="token">
         <div class="section-title-line line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">cat /token_plan</span>
+          <span class="cmd"> cat /token_plan</span>
         </div>
 
         <div class="two-col">
@@ -658,7 +657,7 @@
       <div class="section-block" id="utility">
         <div class="section-title-line line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">cat /utility_stack</span>
+          <span class="cmd"> cat /utility_stack</span>
         </div>
 
         <div class="two-col">
@@ -694,7 +693,7 @@
       <div class="section-block" id="roadmap">
         <div class="section-title-line line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">cat /roadmap</span>
+          <span class="cmd"> cat /roadmap</span>
         </div>
 
         <div class="two-col">
@@ -727,7 +726,7 @@
       <div class="section-block" id="logs">
         <div class="section-title-line line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">tail -n 3 /var/log/404cat.log</span>
+          <span class="cmd"> tail -n 3 /var/log/404cat.log</span>
         </div>
 
         <div class="logs">
@@ -762,7 +761,7 @@
       <div class="section-block" id="faq">
         <div class="section-title-line line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">cat /faq</span>
+          <span class="cmd"> cat /faq</span>
         </div>
 
         <div class="faq-grid">
@@ -800,7 +799,7 @@
       <div class="section-block">
         <div class="line animate-line">
           <span class="prompt">sol@node:~$</span>
-          <span class="cmd">echo "stay synced. real address and utilities announced live."</span>
+          <span class="cmd"> echo "stay synced. real address and utilities announced live."</span>
         </div>
         <div class="line">
           <span class="prompt">sol@node:~$</span><span class="cursor"></span>
@@ -825,11 +824,13 @@
   // footer year
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // scroll typing: simple per-line observer
+  // scroll typing: reveal + typewriter for each .animate-line
   (function () {
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!("IntersectionObserver" in window) || !lines.length) {
-      lines.forEach((l) => l.classList.add("visible"));
+      lines.forEach((l) => {
+        l.classList.add("visible", "typing");
+      });
       return;
     }
 
@@ -838,7 +839,7 @@
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const el = entry.target;
-          el.classList.add("visible");
+          el.classList.add("visible", "typing");
           obs.unobserve(el);
         });
       },
@@ -848,24 +849,18 @@
     lines.forEach((line) => obs.observe(line));
   })();
 
-  // interactive CLI: custom buffer (fixes backwards / delayed text)
+  // interactive CLI using contenteditable span
   (function () {
-    const cliInput = document.getElementById("cli-input");
     const cliEcho = document.getElementById("cli-echo");
     const cliOutput = document.getElementById("cli-output");
     const cliLine = document.getElementById("cli-line");
-    let buffer = "";
-
-    function renderEcho() {
-      cliEcho.textContent = buffer;
-    }
 
     function setOutput(text) {
       if (!text) {
         cliOutput.textContent = "";
         return;
       }
-      cliOutput.innerHTML = "&gt; " + text;
+      cliOutput.textContent = "> " + text;
     }
 
     function jumpTo(id) {
@@ -950,44 +945,21 @@
       setOutput("command not found: " + cmd);
     }
 
-    function handleKey(e) {
-      const key = e.key;
-
-      if (key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey) {
-        buffer += key;
-        renderEcho();
+    cliEcho.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
         e.preventDefault();
-        return;
-      }
-
-      if (key === "Backspace") {
-        buffer = buffer.slice(0, -1);
-        renderEcho();
-        e.preventDefault();
-        return;
-      }
-
-      if (key === "Enter") {
-        e.preventDefault();
-        const cmd = buffer;
-        buffer = "";
-        renderEcho();
+        const cmd = cliEcho.textContent;
+        cliEcho.textContent = "";
         handleCommand(cmd);
-        return;
       }
-    }
-
-    // focus input when clicking the line
-    cliLine.addEventListener("click", () => {
-      cliInput.focus();
     });
 
-    // capture keystrokes via hidden input
-    cliInput.addEventListener("keydown", handleKey);
+    cliLine.addEventListener("click", () => {
+      cliEcho.focus();
+    });
 
-    // on load, focus so mobile keyboard can appear once user taps
     window.addEventListener("load", () => {
-      cliInput.focus();
+      cliEcho.focus();
     });
   })();
 </script>
