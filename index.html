@@ -63,7 +63,7 @@
     .shell-bar {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 8px 16px;
+      padding: 8px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -137,7 +137,7 @@
     .page {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 16px 16px 60px;
+      padding: 12px 8px 48px;
       flex: 1;
     }
 
@@ -154,7 +154,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 10px;
+      padding: 6px 8px;
       background: #020617;
       border-bottom: 1px solid rgba(31, 41, 55, 0.95);
     }
@@ -190,9 +190,10 @@
     }
 
     .terminal-body {
-      padding: 12px 12px 14px;
+      padding: 10px 6px 12px;
       font-size: 12px;
       line-height: 1.5;
+      text-align: left;
     }
 
     .prompt {
@@ -232,7 +233,7 @@
 
     .list {
       margin: 0;
-      padding-left: 20px;
+      padding-left: 18px;
       color: var(--text-soft);
     }
 
@@ -350,7 +351,7 @@
     }
 
     footer {
-      padding: 10px 16px 18px;
+      padding: 10px 12px 18px;
       border-top: 1px solid rgba(31, 41, 55, 0.9);
       background: #020617;
       font-size: 11px;
@@ -404,7 +405,7 @@
       50.01%, 100% { opacity: 0; }
     }
 
-    /* Scroll typing – JS-driven per-character */
+    /* Scroll typing – JS per-character */
     .animate-line {
       opacity: 0;
       white-space: pre-wrap;
@@ -818,23 +819,26 @@
   // footer year
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // TRUE per-character typewriter on scroll (up + down)
+  // TRUE per-character typewriter on scroll (up + down), aligned correctly
   (function () {
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!lines.length) return;
 
-    // Prepare each line: choose a target node to type into
     const lineMap = new WeakMap();
 
     lines.forEach((line) => {
-      let target = line.querySelector(".cmd"); // commands: type only the command part
+      // If the line has a .cmd span, only type that part (keep prompt aligned)
+      let target = line.querySelector(".cmd");
       let full;
 
       if (target) {
-        full = target.textContent;
+        // Clean command text but keep internal spacing
+        full = target.textContent.replace(/^\s+/, "");
         target.textContent = "";
       } else {
-        full = line.textContent.replace(/\s+/g, " ").trim();
+        // For plain output lines, type the whole text including ">"
+        const raw = line.textContent;
+        full = raw.replace(/^\s+/, ""); // strip only leading whitespace from HTML indentation
         line.textContent = "";
         target = document.createElement("span");
         target.className = "type-text";
@@ -852,8 +856,7 @@
     });
 
     function startTyping(item) {
-      if (!item) return;
-      if (item.typing) return;
+      if (!item || item.typing) return;
       item.typing = true;
       item.target.textContent = "";
       item.index = 0;
@@ -903,12 +906,12 @@
             stopTyping(item);
             startTyping(item);
           } else {
-            // when it leaves view, stop typing; it will restart from scratch next time
+            // stop when out of view; will restart from beginning on re-entry
             stopTyping(item);
           }
         });
       },
-      { threshold: 0.6 } // need ~60% of line in view to trigger; reduces flicker
+      { threshold: 0.6 } // need ~60% in view to trigger; reduces jitter
     );
 
     lines.forEach((line) => obs.observe(line));
