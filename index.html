@@ -2,27 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>404CAT – Solana native error coin for devs and degens</title>
+  <title>404CAT – solana-native terminal cat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="404CAT is a Solana native error coin and terminal brained utility stack for devs and degens. Meme on the surface, tools under the hood."
+    content="404CAT is a Solana-native meme and terminal-flavored tool stack for devs and degens. Token first, utilities online shortly after."
   />
   <style>
     :root {
-      --bg: #02030a;
-      --bg-alt: #050718;
-      --bg-soft: #0a0f25;
+      --bg: #020617;
+      --bg-alt: #030712;
+      --bg-soft: #020617;
       --accent: #7c3aed;
-      --accent-soft: rgba(124, 58, 237, 0.18);
+      --accent-soft: rgba(124, 58, 237, 0.35);
       --accent-2: #22c55e;
       --text: #e5e7eb;
       --text-soft: #9ca3af;
       --border: #1f2937;
       --error: #f97316;
-      --radius-lg: 18px;
-      --radius-sm: 10px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.55);
+      --radius-lg: 10px;
+      --radius-sm: 8px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.75);
       --terminal-font: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans-font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
     }
@@ -36,9 +36,9 @@
       margin: 0;
       padding: 0;
       scroll-behavior: smooth;
-      background: radial-gradient(circle at top, #111827 0, #02030a 55%);
+      background: radial-gradient(circle at top, #020617 0, #000000 55%);
       color: var(--text);
-      font-family: var(--sans-font);
+      font-family: var(--terminal-font);
     }
 
     body {
@@ -57,29 +57,19 @@
       display: block;
     }
 
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 16px 80px;
-    }
-
     header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background: linear-gradient(to bottom, rgba(2, 6, 23, 0.96), rgba(2, 6, 23, 0.88), transparent);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+      background: #020617;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
     }
 
-    .nav-inner {
+    .shell-bar {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 10px 16px;
+      padding: 8px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      gap: 12px;
     }
 
     .brand {
@@ -91,13 +81,19 @@
     .brand-mark {
       width: 32px;
       height: 32px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, #fefce8 0, #facc15 25%, #1d1b28 60%, #02030a 100%);
-      box-shadow: 0 0 30px rgba(250, 204, 21, 0.35);
+      border-radius: 4px;
+      background: #020617;
+      border: 1px solid rgba(55, 65, 81, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      overflow: hidden;
+    }
+
+    .brand-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .brand-text {
@@ -107,9 +103,8 @@
     }
 
     .brand-text span:first-child {
-      font-family: var(--terminal-font);
-      font-size: 16px;
-      letter-spacing: 0.08em;
+      font-size: 14px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
@@ -118,207 +113,41 @@
       color: var(--text-soft);
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-size: 13px;
-    }
-
-    .nav-links a {
+    .shell-status {
+      font-size: 11px;
       color: var(--text-soft);
-      padding: 4px 0;
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -3px;
-      width: 0;
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent-2), var(--accent));
-      transition: width 0.18s ease-out;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-    }
-
-    .nav-links a:hover::after {
-      width: 100%;
-    }
-
-    .nav-cta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn {
-      border-radius: 999px;
-      padding: 7px 16px;
-      font-size: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      background: rgba(15, 23, 42, 0.8);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 0.15s ease, transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
-      font-family: var(--terminal-font);
-    }
-
-    .btn span.dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
-    }
-
-    .btn-primary {
-      background: radial-gradient(circle at 0 0, rgba(34, 197, 94, 0.25), transparent 60%),
-        linear-gradient(120deg, #22c55e, #16a34a, #22c55e);
-      border-color: transparent;
-      color: #020617;
-      box-shadow: 0 16px 30px rgba(22, 163, 74, 0.35);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 20px 40px rgba(22, 163, 74, 0.6);
-    }
-
-    .btn-ghost {
-      background: rgba(15, 23, 42, 0.85);
-      color: var(--text-soft);
-    }
-
-    .btn-ghost:hover {
-      background: rgba(15, 23, 42, 1);
-      color: var(--text);
-      transform: translateY(-1px);
-      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.6);
-    }
-
-    .mobile-toggle {
       display: none;
     }
 
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
+    .shell-status span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.95);
+      display: inline-block;
+      margin-right: 6px;
+    }
 
-      .nav-cta {
-        display: none;
-      }
-
-      .mobile-toggle {
+    @media (min-width: 720px) {
+      .shell-status {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 999px;
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        background: rgba(15, 23, 42, 0.9);
-        cursor: pointer;
       }
     }
 
-    .hero {
-      padding: 40px 0 36px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
-      gap: 32px;
-      align-items: center;
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 16px 60px;
+      flex: 1;
     }
 
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: minmax(0, 1fr);
-        padding-top: 28px;
-      }
-    }
-
-    .hero-kicker {
-      font-family: var(--terminal-font);
-      font-size: 12px;
-      color: var(--accent-2);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 10px;
-    }
-
-    .hero-title {
-      font-size: clamp(30px, 4vw, 40px);
-      line-height: 1.1;
-      font-weight: 650;
-      margin-bottom: 14px;
-    }
-
-    .hero-title span.error {
-      background: linear-gradient(120deg, #f97316, #facc15);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-subtitle {
-      color: var(--text-soft);
-      font-size: 14px;
-      max-width: 520px;
-      margin-bottom: 18px;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      font-size: 11px;
-      color: var(--text-soft);
-      font-family: var(--terminal-font);
-    }
-
-    .hero-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(31, 41, 55, 0.9);
-    }
-
-    .hero-meta span::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      box-shadow: 0 0 10px rgba(124, 58, 237, 0.7);
-    }
-
-    .terminal {
-      background: radial-gradient(circle at top left, rgba(124, 58, 237, 0.35), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.28), transparent 60%), var(--bg-soft);
-      border-radius: 22px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
+    .terminal-shell {
+      border-radius: 10px;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.98));
       box-shadow: var(--shadow-soft);
-      padding: 16px 16px 18px;
-      font-family: var(--terminal-font);
-      font-size: 12px;
-      position: relative;
       overflow: hidden;
     }
 
@@ -326,7 +155,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      padding: 8px 10px;
+      background: #020617;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.95);
     }
 
     .terminal-dots {
@@ -360,295 +191,86 @@
     }
 
     .terminal-body {
-      padding-top: 6px;
-      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 12px 12px 14px;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
-    .terminal-line {
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .terminal-prompt {
+    .prompt {
       color: #22c55e;
     }
 
-    .terminal-output {
+    .line {
+      margin-bottom: 4px;
+    }
+
+    .line:last-child {
+      margin-bottom: 0;
+    }
+
+    .cmd {
       color: #e5e7eb;
     }
 
-    .terminal-output span.tag {
+    .output {
+      color: #d1d5db;
+    }
+
+    .output-soft {
+      color: var(--text-soft);
+    }
+
+    .tag-ok {
       color: var(--accent-2);
     }
 
-    .terminal-output span.warn {
-      color: #f97316;
+    .tag-warn {
+      color: var(--error);
     }
 
-    .terminal-footer {
-      margin-top: 10px;
-      font-size: 10px;
-      color: var(--text-soft);
-      opacity: 0.9;
-    }
-
-    section {
-      margin-top: 32px;
-      padding-top: 20px;
+    .section-block {
+      margin-top: 12px;
+      padding-top: 8px;
       border-top: 1px solid rgba(31, 41, 55, 0.7);
     }
 
-    section:first-of-type {
-      border-top: none;
-      padding-top: 0;
+    .section-title-line {
+      margin-bottom: 4px;
     }
 
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: var(--terminal-font);
-      font-size: 14px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    .list {
+      margin: 0;
+      padding-left: 20px;
       color: var(--text-soft);
     }
 
-    .section-caption {
-      font-size: 12px;
-      color: var(--text-soft);
-      max-width: 420px;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr);
-      gap: 22px;
-    }
-
-    @media (max-width: 900px) {
-      .two-col {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .card {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.96));
-      padding: 16px 16px 14px;
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.65);
-    }
-
-    .card-soft {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      background: rgba(15, 23, 42, 0.96);
-      padding: 14px 14px 13px;
-    }
-
-    .card-title {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    .card-subtitle {
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-bottom: 10px;
+    .list li {
+      margin-bottom: 2px;
     }
 
     .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
+      gap: 5px;
+      margin-top: 4px;
     }
 
     .pill {
       font-size: 11px;
-      padding: 4px 8px;
+      padding: 2px 6px;
       border-radius: 999px;
       border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-soft);
-    }
-
-    .pill.accent {
-      border-color: rgba(124, 58, 237, 0.9);
       background: rgba(15, 23, 42, 0.96);
-      color: var(--accent-2);
-    }
-
-    .utility-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 14px;
-    }
-
-    @media (max-width: 700px) {
-      .utility-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .utility-item {
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 10px 11px;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.95));
-      font-size: 12px;
-    }
-
-    .utility-label {
-      font-family: var(--terminal-font);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--text-soft);
-      margin-bottom: 4px;
-    }
-
-    .utility-name {
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .utility-desc {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-bottom: 6px;
-    }
-
-    .utility-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
-      color: var(--text-soft);
-    }
-
-    .utility-meta span.status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
-    }
-
-    .status-dot.pending {
-      background: #eab308;
-      box-shadow: 0 0 10px rgba(234, 179, 8, 0.8);
-    }
-
-    .timeline {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 10px;
-      font-size: 12px;
-    }
-
-    .timeline-row {
-      display: grid;
-      grid-template-columns: 90px minmax(0, 1fr);
-      gap: 12px;
-      align-items: baseline;
-    }
-
-    .timeline-label {
-      font-family: var(--terminal-font);
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-size: 10px;
-      color: var(--text-soft);
-    }
-
-    .timeline-content strong {
-      font-weight: 600;
-    }
-
-    .timeline-content p {
-      margin: 3px 0 0;
-      color: var(--text-soft);
-    }
-
-    .logs {
-      font-family: var(--terminal-font);
-      font-size: 11px;
-    }
-
-    .log-entry {
-      padding: 8px 0;
-      border-bottom: 1px dashed rgba(55, 65, 81, 0.9);
-    }
-
-    .log-entry:last-child {
-      border-bottom: none;
-    }
-
-    .log-meta {
-      color: var(--text-soft);
-      margin-bottom: 2px;
-    }
-
-    .log-body {
-      color: var(--text);
-    }
-
-    .log-tag {
-      color: var(--accent-2);
-    }
-
-    .faq-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 14px;
-      font-size: 12px;
-    }
-
-    @media (max-width: 800px) {
-      .faq-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .faq-item {
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 10px 11px;
-      background: rgba(15, 23, 42, 0.96);
-    }
-
-    .faq-q {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .faq-a {
       color: var(--text-soft);
     }
 
     .token-code {
-      font-family: var(--terminal-font);
       font-size: 11px;
       padding: 6px 8px;
-      border-radius: 8px;
+      border-radius: 6px;
       background: rgba(15, 23, 42, 0.96);
       border: 1px dashed rgba(75, 85, 99, 0.9);
-      margin-top: 8px;
+      margin-top: 6px;
       color: var(--text-soft);
     }
 
@@ -660,10 +282,89 @@
       color: #fb923c;
     }
 
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.3fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 840px) {
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .box {
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      padding: 8px 8px 6px;
+    }
+
+    .logs {
+      margin-top: 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 6px 8px;
+    }
+
+    .log-entry {
+      border-bottom: 1px dashed rgba(55, 65, 81, 0.8);
+      padding: 3px 0;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-meta {
+      color: var(--text-soft);
+      font-size: 11px;
+    }
+
+    .log-body {
+      font-size: 11px;
+    }
+
+    .log-tag {
+      color: var(--accent-2);
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 840px) {
+      .faq-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .faq-item {
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 6px 7px 5px;
+      background: rgba(15, 23, 42, 0.96);
+      font-size: 11px;
+    }
+
+    .faq-q {
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #e5e7eb;
+    }
+
+    .faq-a {
+      color: var(--text-soft);
+    }
+
     footer {
-      padding: 18px 16px 26px;
+      padding: 10px 16px 18px;
       border-top: 1px solid rgba(31, 41, 55, 0.9);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), #020617);
+      background: #020617;
       font-size: 11px;
       color: var(--text-soft);
     }
@@ -674,19 +375,19 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
     }
 
     .footer-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
     }
 
     .footer-links a {
-      padding: 4px 8px;
+      padding: 2px 6px;
       border-radius: 999px;
       border: 1px solid rgba(55, 65, 81, 0.9);
       background: rgba(15, 23, 42, 0.96);
@@ -695,489 +396,290 @@
 </head>
 <body>
   <header>
-    <div class="nav-inner">
+    <div class="shell-bar">
       <div class="brand">
-        <div class="brand-mark">🐈‍⬛</div>
+        <div class="brand-mark">
+          <!-- Put your actual 404CAT logo file as 404cat-logo.png in the repo root -->
+          <img src="404cat-logo.png" alt="404CAT logo" class="brand-logo" />
+        </div>
         <div class="brand-text">
           <span>404CAT</span>
-          <span>anomaly_detected | cat.sys missing (404)</span>
+          <span>solana-native terminal cat</span>
         </div>
       </div>
-      <nav class="nav-links">
-        <a href="#about">about</a>
-        <a href="#utility">utility</a>
-        <a href="#token">token</a>
-        <a href="#roadmap">roadmap</a>
-        <a href="#logs">logs</a>
-        <a href="#faq">faq</a>
-      </nav>
-      <div class="nav-cta">
-        <a href="https://t.me/cat_not_found" target="_blank" rel="noopener" class="btn btn-ghost">
-          <span class="dot"></span>
-          <span>join telegram</span>
-        </a>
-        <a href="https://x.com/404CATsolana" target="_blank" rel="noopener" class="btn btn-primary">
-          <span>follow on X</span>
-        </a>
+      <div class="shell-status">
+        <span class="dot"></span> session: prelaunch | contract_not_initiated
       </div>
-      <button class="mobile-toggle" aria-label="Open navigation">
-        <span>≡</span>
-      </button>
     </div>
   </header>
 
   <main class="page">
-    <!-- Hero -->
-    <section class="hero">
-      <div>
-        <div class="hero-kicker">sol@node:~$ scan.network --404cat</div>
-        <h1 class="hero-title">
-          404: <span class="error">cat_not_found</span><br />
-          operator located. stack arming.
-        </h1>
-        <p class="hero-subtitle">
-          404CAT is a Solana native error coin for devs and degens who live inside terminals. Token launches first, utility
-          comes online right after, so the meme and the tools boot at almost the same block.
-        </p>
-        <div class="hero-actions">
-          <a href="https://t.me/cat_not_found" target="_blank" rel="noopener" class="btn btn-primary">
-            <span>sync with the mesh</span>
-          </a>
-          <a href="#token" class="btn btn-ghost">
-            <span>view token plan</span>
-          </a>
+    <div class="terminal-shell">
+      <div class="terminal-header">
+        <div class="terminal-dots">
+          <div class="terminal-dot red"></div>
+          <div class="terminal-dot yellow"></div>
+          <div class="terminal-dot green"></div>
         </div>
-        <div class="hero-meta">
-          <span>no vc bags</span>
-          <span>terminal persona online</span>
-          <span>utility reveal follows launch</span>
-        </div>
+        <div class="terminal-title">sol@node:~$ 404cat.meme</div>
       </div>
 
-      <div>
-        <div class="terminal">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <div class="terminal-dot red"></div>
-              <div class="terminal-dot yellow"></div>
-              <div class="terminal-dot green"></div>
-            </div>
-            <div class="terminal-title">404CAT:~$ landing.log</div>
-          </div>
-          <div class="terminal-body">
-            <div class="terminal-line">
-              <span class="terminal-prompt">sol@node:~$</span>
-              <span class="terminal-output">sys.ping 404cat</span>
-            </div>
-            <div class="terminal-line terminal-output">
-              &gt; anomaly_detected | cat.sys missing (404)
-            </div>
-            <div class="terminal-line">
-              <span class="terminal-prompt">sol@node:~$</span>
-              <span class="terminal-output">scan.contract --status</span>
-            </div>
-            <div class="terminal-line terminal-output">
-              &gt; contract: <span class="warn">not_initiated</span> | mode: prelaunch
-            </div>
-            <div class="terminal-line">
-              <span class="terminal-prompt">sol@node:~$</span>
-              <span class="terminal-output">scan.utility --stack</span>
-            </div>
-            <div class="terminal-line terminal-output">
-              &gt; first tool: <span class="tag">pump.fun / wallet intel</span> | state: private build
-            </div>
-            <div class="terminal-line">
-              <span class="terminal-prompt">sol@node:~$</span>
-              <span class="terminal-output">echo "token first. utility reveal right after."</span>
-            </div>
-          </div>
-          <div class="terminal-footer">
-            system note: contract_not_initiated. token arming sequence in flight. utility link stays dark until after launch.
-          </div>
+      <div class="terminal-body">
+        <!-- Intro -->
+        <div class="line">
+          <span class="prompt">sol@node:~$</span>
+          <span class="cmd">sys.ping 404cat</span>
         </div>
-      </div>
-    </section>
-
-    <!-- About -->
-    <section id="about">
-      <div class="section-header">
-        <h2 class="section-title">/about</h2>
-        <p class="section-caption">
-          404CAT is the punchline for every time you open a chart, sniff a launch, and ask "where are the actual builders"
-          and the network throws an error back.
-        </p>
-      </div>
-
-      <div class="two-col">
-        <div class="card">
-          <h3 class="card-title">What is 404CAT</h3>
-          <p class="card-subtitle">
-            A Solana native meme wired to a real stack. Error coin, cat lore, and terminal voice on the surface. Lean tools
-            under the hood for people who treat memecoins like a command line.
-          </p>
-          <p style="font-size: 13px; margin-bottom: 8px;">
-            No pitch deck. No fake fundraise. Just:
-          </p>
-          <ul style="font-size: 12px; color: var(--text-soft); padding-left: 18px; margin: 0 0 10px;">
-            <li>Branding that reads like a system log.</li>
-            <li>A token that exists first, then powers access and perks.</li>
-            <li>Tools that get shipped while the timeline is still asking if there is utility.</li>
-          </ul>
-          <div class="pill-row">
-            <span class="pill accent">solana native</span>
-            <span class="pill">terminal voice locked</span>
-            <span class="pill">token first</span>
-            <span class="pill">utility on standby</span>
-          </div>
+        <div class="line output">
+          &gt; signal: <span class="tag-ok">online</span> | mode: token_first | utility: staged_for_reveal
         </div>
 
-        <div class="card-soft">
-          <h3 class="card-title">Who this is for</h3>
-          <p class="card-subtitle">
-            If you write "sol@node:~$" in your head when you open X, you are already part of the target audience.
-          </p>
-          <p style="font-size: 12px; color: var(--text-soft); margin-bottom: 8px;">
-            404CAT is built for:
-          </p>
-          <ul style="font-size: 12px; color: var(--text-soft); padding-left: 18px; margin: 0 0 8px;">
-            <li>Solana devs who live in terminals and IDE logs.</li>
-            <li>Degens who want scanners that talk like them, not like a bank.</li>
-            <li>Operators who like their meme projects with a live toolchain attached.</li>
-          </ul>
-          <p style="font-size: 11px; color: var(--text-soft); margin-top: 6px;">
-            You do not have to pretend it is a serious L1. You just have to enjoy the chaos, respect the craft, and read the
-            output.
-          </p>
+        <div class="line">
+          <span class="prompt">sol@node:~$</span>
+          <span class="cmd">echo "404: cat_not_found, operator located"</span>
         </div>
-      </div>
-    </section>
-
-    <!-- Utility -->
-    <section id="utility">
-      <div class="section-header">
-        <h2 class="section-title">/utility stack</h2>
-        <p class="section-caption">
-          Utility is not a promise here. It is a repo. First tool is already compiling. Public link comes online shortly after
-          the token launch.
-        </p>
-      </div>
-
-      <div class="two-col">
-        <div class="card">
-          <h3 class="card-title">Utility philosophy</h3>
-          <p class="card-subtitle">
-            No "coming someday" roadshow features. If it is on this page, it is either shipped, under test, or in a real
-            backlog, not a vibe board.
-          </p>
-          <ul style="font-size: 12px; color: var(--text-soft); padding-left: 18px; margin: 0 0 10px;">
-            <li>Tools focused on Solana memecoins, pump.fun flow, and wallet behavior.</li>
-            <li>UI that stays browser simple with a terminal flavor on top.</li>
-            <li>Clean code so you can screenshot it, fork it, or bully it if needed.</li>
-          </ul>
-          <p style="font-size: 11px; color: var(--text-soft); margin-top: 4px;">
-            The MVP is running behind the curtain now. After the token is live, this section will wire directly into the app
-            endpoint.
-          </p>
+        <div class="line output-soft">
+          &gt; 404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
         </div>
 
-        <div class="utility-grid">
-          <!-- Tool 1 -->
-          <div class="utility-item">
-            <div class="utility-label">online · private mvp</div>
-            <div class="utility-name">pump.fun token intel and wallet scan</div>
-            <div class="utility-desc">
-              Scan Solana wallets and fresh pump.fun tokens for quick signal. Age, basic history, early risk flags, and
-              "does this feel like a landmine or a maybe" context.
-            </div>
-            <div class="utility-meta">
-              <span class="status">
-                <span class="status-dot"></span>
-                <span>status: internal testing</span>
-              </span>
-              <span>access: mesh after launch</span>
-            </div>
+        <!-- ABOUT -->
+        <div class="section-block" id="about">
+          <div class="section-title-line">
+            <span class="prompt">sol@node:~$</span>
+            <span class="cmd">cat /about</span>
           </div>
-
-          <!-- Tool 2 -->
-          <div class="utility-item">
-            <div class="utility-label">queued</div>
-            <div class="utility-name">404CAT hud overlay</div>
-            <div class="utility-desc">
-              Lightweight overlay for live token pages. Surface risk notes, wallet maps, and basic dev behavior without
-              leaving the chart.
-            </div>
-            <div class="utility-meta">
-              <span class="status">
-                <span class="status-dot pending"></span>
-                <span>status: design</span>
-              </span>
-              <span>priority: high</span>
-            </div>
-          </div>
-
-          <!-- Tool 3 -->
-          <div class="utility-item">
-            <div class="utility-label">research</div>
-            <div class="utility-name">404CAT alerts</div>
-            <div class="utility-desc">
-              Telegram first alerts when certain wallet patterns, liquidity setups, or launch conditions hit your filters.
-              Low noise, high intent.
-            </div>
-            <div class="utility-meta">
-              <span class="status">
-                <span class="status-dot pending"></span>
-                <span>status: spec</span>
-              </span>
-              <span>channel: tg</span>
-            </div>
-          </div>
-
-          <!-- Tool 4 -->
-          <div class="utility-item">
-            <div class="utility-label">sandbox</div>
-            <div class="utility-name">dev toys and side quests</div>
-            <div class="utility-desc">
-              Small terminal toys, log visualizers, and whatever the operator decides to ship during zero sleep build
-              cycles.
-            </div>
-            <div class="utility-meta">
-              <span class="status">
-                <span class="status-dot pending"></span>
-                <span>status: experiments</span>
-              </span>
-              <span>eta: chaos based</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Token -->
-    <section id="token">
-      <div class="section-header">
-        <h2 class="section-title">/token</h2>
-        <p class="section-caption">
-          Token boots first. Utility unveils right after. Meme, contract, and tools are meant to feel like the same program
-          starting up, not separate products.
-        </p>
-      </div>
-
-      <div class="two-col">
-        <div class="card">
-          <h3 class="card-title">$404CAT token details</h3>
-          <p class="card-subtitle">
-            Full tokenomics are being finalized off chain. The core rules are already committed mentally and are not going to
-            drift.
-          </p>
-          <ul style="font-size: 12px; color: var(--text-soft); padding-left: 18px; margin: 0 0 8px;">
-            <li>No VC slice, no secret presale that leaks in group chats later.</li>
-            <li>Focus on community and liquidity. Tools exist regardless of price action.</li>
-            <li>Utility hooks planned into scanners, alerts, and access gates over time.</li>
-          </ul>
-          <div class="pill-row">
-            <span class="pill">chain: solana</span>
-            <span class="pill">ticker: tba</span>
-            <span class="pill">status: prelaunch</span>
-          </div>
-          <div class="token-code">
-            <div><span class="key">sol@node:~$</span> cat contract.cfg</div>
-            <div>&gt; <span class="key">contract_address</span> = <span class="value">"contract_not_initiated"</span></div>
-            <div>&gt; <span class="key">launch_mode</span> = "<span class="value">arming_sequence</span>"</div>
-          </div>
-          <p style="font-size: 11px; color: var(--text-soft); margin-top: 8px;">
-            After launch, this block updates with the real contract address and a simple guide so nobody has to guess which
-            404CAT is the actual one.
-          </p>
-        </div>
-
-        <div class="card-soft">
-          <h3 class="card-title">How it plugs into the stack</h3>
-          <div class="timeline">
-            <div class="timeline-row">
-              <div class="timeline-label">phase 1</div>
-              <div class="timeline-content">
-                <strong>Launch and identity lock</strong>
-                <p>Token live. Branding, messaging, and contract are pinned. Socials and site route to the one real CA.</p>
+          <div class="two-col">
+            <div>
+              <div class="line output-soft">
+                &gt; description:
+              </div>
+              <ul class="list">
+                <li>terminal flavored branding and voice, not corporate decks</li>
+                <li>token as the identity layer, utilities wired in after launch</li>
+                <li>no fake roadshow, just things that get shipped and used</li>
+              </ul>
+              <div class="pill-row">
+                <span class="pill">chain: solana</span>
+                <span class="pill">mode: token_first</span>
+                <span class="pill">voice: terminal_native</span>
               </div>
             </div>
-            <div class="timeline-row">
-              <div class="timeline-label">phase 2</div>
-              <div class="timeline-content">
-                <strong>Utility reveal and access</strong>
-                <p>First tool goes public. Holders get early access lanes, private settings, and small quality of life perks.</p>
+            <div class="box">
+              <div class="line output-soft">
+                &gt; built for:
               </div>
-            </div>
-            <div class="timeline-row">
-              <div class="timeline-label">phase 3</div>
-              <div class="timeline-content">
-                <strong>Deeper integration</strong>
-                <p>Usage based perks, extra unlocks, and potential fee routing from future tools as the stack expands.</p>
+              <ul class="list">
+                <li>devs who live inside terminals and logs</li>
+                <li>degenerates who want simple tools around launches and wallets</li>
+                <li>operators who like memes that come with utilities attached</li>
+              </ul>
+              <div class="line output-soft" style="margin-top:4px;">
+                &gt; requirement: enjoy the chaos, respect the craft, read the output
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Roadmap -->
-    <section id="roadmap">
-      <div class="section-header">
-        <h2 class="section-title">/roadmap</h2>
-        <p class="section-caption">
-          Not a ten page PDF. Just the sequence of operations that are actually happening.
-        </p>
-      </div>
-
-      <div class="two-col">
-        <div class="card">
-          <h3 class="card-title">Near term</h3>
-          <ul style="font-size: 12px; color: var(--text-soft); padding-left: 18px; margin: 0 0 4px;">
-            <li>Lock final tokenomics and launch plan.</li>
-            <li>Launch $404CAT and update contract address across site and socials.</li>
-            <li>Flip the first utility endpoint from private to live for the community.</li>
-            <li>Publish a short, honest "how to use the tool without coping" guide.</li>
-          </ul>
-        </div>
-
-        <div class="card-soft">
-          <h3 class="card-title">After launch</h3>
-          <ul style="font-size: 12px; color: var(--text-soft); padding-left: 18px; margin: 0 0 4px;">
-            <li>Ship HUD overlay and refine pump.fun and wallet heuristics.</li>
-            <li>Integrate Telegram alerts and holder perks without turning it into spam.</li>
-            <li>Iterate based on real usage, not just engagement farming.</li>
-            <li>Keep 404CAT fun, sharp, and terminal native. If it starts to feel like a brand deck, refactor it.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Logs -->
-    <section id="logs">
-      <div class="section-header">
-        <h2 class="section-title">/terminal logs</h2>
-        <p class="section-caption">
-          Human readable changelog for 404CAT. Think git log for the meme, formatted like your favorite session.
-        </p>
-      </div>
-
-      <div class="card logs">
-        <div class="log-entry">
-          <div class="log-meta">[2025-11-30 · 03:42] · tag: <span class="log-tag">build</span></div>
-          <div class="log-body">
-            sol@node:~$ sys.update status &gt; first utility MVP compiled and wired. kept private while token arm sequence starts.
+        <!-- TOKEN -->
+        <div class="section-block" id="token">
+          <div class="section-title-line">
+            <span class="prompt">sol@node:~$</span>
+            <span class="cmd">cat /token_plan</span>
           </div>
-        </div>
-        <div class="log-entry">
-          <div class="log-meta">[2025-11-30 · 10:15] · tag: <span class="log-tag">site</span></div>
-          <div class="log-body">
-            sol@node:~$ cat /sys/www &gt; landing page promoted to full site. sections for token, utility, roadmap, faq added.
-          </div>
-        </div>
-        <div class="log-entry">
-          <div class="log-meta">[pending] · tag: <span class="log-tag">launch</span></div>
-          <div class="log-body">
-            sol@node:~$ scan.network --404cat &gt; contract_not_initiated. launch window scanning. watch X and TG for the real CA.
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- FAQ -->
-    <section id="faq">
-      <div class="section-header">
-        <h2 class="section-title">/faq</h2>
-        <p class="section-caption">
-          The questions everyone asks in the first two days, answered once so you can just paste a link.
-        </p>
-      </div>
+          <div class="two-col">
+            <div>
+              <div class="line output-soft">
+                &gt; status: prelaunch
+              </div>
+              <ul class="list">
+                <li>contract not yet deployed, no fake copies are real</li>
+                <li>token comes online first, then utilities link into it</li>
+                <li>no talk of raises or venture slices, focus stays on flow</li>
+              </ul>
+              <div class="token-code">
+                <div><span class="key">sol@node:~$</span> cat contract.cfg</div>
+                <div>&gt; <span class="key">contract_address</span> = <span class="value">"contract_not_initiated"</span></div>
+                <div>&gt; <span class="key">launch_mode</span> = <span class="value">"arming_sequence"</span></div>
+              </div>
+              <div class="line output-soft" style="margin-top:6px;">
+                &gt; after deployment this block updates with the real address and a simple "how not to get tricked" checklist
+              </div>
+            </div>
 
-      <div class="faq-grid">
-        <div class="faq-item">
-          <div class="faq-q">Is the token live yet</div>
-          <div class="faq-a">
-            Not at the moment. When it is live, the contract address shows up here and on the 404CAT X bio so there is no
-            guessing and no fake copies you have to fight.
+            <div class="box">
+              <div class="line output-soft">
+                &gt; planned flow:
+              </div>
+              <ul class="list">
+                <li>phase 1: token launch and identity lock across site and socials</li>
+                <li>phase 2: first utility revealed and opened to the community</li>
+                <li>phase 3: deeper hooks and small perks for active holders</li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-q">Is this just another meme with fake utility</div>
-          <div class="faq-a">
-            It is absolutely a meme. The difference is that the utility exists as a real product. You can use it without
-            pretending it is a revolution. It just has to be useful and on brand.
+        <!-- UTILITY -->
+        <div class="section-block" id="utility">
+          <div class="section-title-line">
+            <span class="prompt">sol@node:~$</span>
+            <span class="cmd">cat /utility_stack</span>
+          </div>
+
+          <div class="two-col">
+            <div>
+              <div class="line output-soft">
+                &gt; policy:
+              </div>
+              <ul class="list">
+                <li>no imaginary features; utilities exist as real builds</li>
+                <li>focus on Solana launches and wallet behavior</li>
+                <li>keep interfaces simple, terminal flavored, and fast to use</li>
+              </ul>
+              <div class="line output-soft" style="margin-top:4px;">
+                &gt; note: first utility is already compiling in private and goes public shortly after the token comes online
+              </div>
+            </div>
+
+            <div class="box">
+              <div class="line output-soft">
+                &gt; stack outline:
+              </div>
+              <ul class="list">
+                <li>tool_01: launch and wallet intel mvp (private until post-launch)</li>
+                <li>tool_02: overlay style view for quick risk notes and context</li>
+                <li>tool_03: low noise alert flow routed through Telegram</li>
+                <li>tool_04: small dev toys and side experiments from late cycles</li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-q">Why launch the token first</div>
-          <div class="faq-a">
-            The token is the identity layer. Once it is live and verified, the utility reveal hits with a clear route for
-            holders and the larger Solana crowd. No tools drifting around without a core asset.
+        <!-- ROADMAP -->
+        <div class="section-block" id="roadmap">
+          <div class="section-title-line">
+            <span class="prompt">sol@node:~$</span>
+            <span class="cmd">cat /roadmap</span>
+          </div>
+
+          <div class="two-col">
+            <div class="box">
+              <div class="line output-soft">
+                &gt; near_term:
+              </div>
+              <ul class="list">
+                <li>finalize launch details and timing for the token</li>
+                <li>deploy contract and update all public surfaces with the real address</li>
+                <li>turn on the first utility endpoint for the community</li>
+                <li>publish a short usage note so nobody has to guess how it works</li>
+              </ul>
+            </div>
+            <div class="box">
+              <div class="line output-soft">
+                &gt; after_launch:
+              </div>
+              <ul class="list">
+                <li>iterate on tools based on real feedback and data</li>
+                <li>expand overlay and alert features in a controlled way</li>
+                <li>keep everything terminal native, avoid overdesigned clutter</li>
+                <li>if it stops feeling fun or authentic, refactor it</li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-q">How do I get early access to tools</div>
-          <div class="faq-a">
-            Join the Telegram at <a href="https://t.me/cat_not_found" target="_blank" rel="noopener">t.me/cat_not_found</a>,
-            follow <a href="https://x.com/404CATsolana" target="_blank" rel="noopener">@404CATsolana</a>, and stay close.
-            Early testers and active operators see new utilities before the rest of the network.
+        <!-- LOGS -->
+        <div class="section-block" id="logs">
+          <div class="section-title-line">
+            <span class="prompt">sol@node:~$</span>
+            <span class="cmd">tail -n 3 /var/log/404cat.log</span>
+          </div>
+
+          <div class="logs">
+            <div class="log-entry">
+              <div class="log-meta">[2025-11-30 03:42] tag: <span class="log-tag">build</span></div>
+              <div class="log-body">
+                &gt; compiled first utility mvp. kept link dark while token arm sequence starts.
+              </div>
+            </div>
+            <div class="log-entry">
+              <div class="log-meta">[2025-11-30 10:15] tag: <span class="log-tag">site</span></div>
+              <div class="log-body">
+                &gt; promoted landing to full console style interface. sections mounted for about, token, utility, roadmap, faq.
+              </div>
+            </div>
+            <div class="log-entry">
+              <div class="log-meta">[pending] tag: <span class="log-tag">launch</span></div>
+              <div class="log-body">
+                &gt; contract_not_initiated. network scanning for optimal launch window. follow X and Telegram for the real address.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="section-block" id="faq">
+          <div class="section-title-line">
+            <span class="prompt">sol@node:~$</span>
+            <span class="cmd">cat /faq</span>
+          </div>
+
+          <div class="faq-grid">
+            <div class="faq-item">
+              <div class="faq-q">is the token live</div>
+              <div class="faq-a">
+                not yet. when it is live, the real contract address will be displayed here and on the 404CAT X profile. if it is not in both places, it is not the real one.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">what about utilities</div>
+              <div class="faq-a">
+                utilities are already in progress. the first one opens shortly after launch and more arrive as they are tested and hardened. no giant promises, just builds.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">why token first</div>
+              <div class="faq-a">
+                the token is the identity anchor. once it exists and is verified, utilities can plug into it cleanly and the rest of the stack can grow without confusion.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">where do i stay updated</div>
+              <div class="faq-a">
+                main signal routes are X and Telegram:
+                <br />
+                - X: <a href="https://x.com/404CATsolana" target="_blank" rel="noopener">@404CATsolana</a><br />
+                - TG: <a href="https://t.me/cat_not_found" target="_blank" rel="noopener">t.me/cat_not_found</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Outro -->
+        <div class="section-block">
+          <div class="line">
+            <span class="prompt">sol@node:~$</span>
+            <span class="cmd">echo "stay synced. real address and utilities announced live."</span>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 
   <footer>
     <div class="footer-inner">
-      <div>© <span id="year"></span> 404CAT. contract_not_initiated. error coin for solana devs and degens.</div>
+      <div>© <span id="year"></span> 404CAT. contract_not_initiated. terminal cat for solana devs and degens.</div>
       <div class="footer-links">
         <a href="https://x.com/404CATsolana" target="_blank" rel="noopener">X / Twitter</a>
         <a href="https://t.me/cat_not_found" target="_blank" rel="noopener">Telegram</a>
-        <a href="#logs">terminal logs</a>
+        <a href="#logs">logs</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // Set current year in footer
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Mobile nav toggle
-    const toggle = document.querySelector(".mobile-toggle");
-    const navLinks = document.querySelector(".nav-links");
-
-    if (toggle) {
-      toggle.addEventListener("click", () => {
-        const open = navLinks.style.display === "flex";
-        navLinks.style.display = open ? "none" : "flex";
-        navLinks.style.flexDirection = "column";
-        navLinks.style.background = "rgba(2, 6, 23, 0.98)";
-        navLinks.style.position = "absolute";
-        navLinks.style.top = "52px";
-        navLinks.style.right = "16px";
-        navLinks.style.padding = "10px 14px";
-        navLinks.style.borderRadius = "14px";
-        navLinks.style.border = "1px solid rgba(55, 65, 81, 0.9)";
-        navLinks.style.boxShadow = "0 20px 40px rgba(0,0,0,0.85)";
-
-        if (!document.querySelector(".nav-links .mobile-cta") && !open) {
-          const ctaWrapper = document.createElement("div");
-          ctaWrapper.className = "mobile-cta";
-          ctaWrapper.style.marginTop = "8px";
-          ctaWrapper.innerHTML = `
-            <a href="https://t.me/cat_not_found" target="_blank" rel="noopener" class="btn btn-ghost" style="width:100%; justify-content:center; margin-bottom:6px;">
-              <span class="dot"></span>
-              <span>join telegram</span>
-            </a>
-            <a href="https://x.com/404CATsolana" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%; justify-content:center;">
-              <span>follow on X</span>
-            </a>
-          `;
-          navLinks.appendChild(ctaWrapper);
-        }
-      });
-    }
   </script>
 </body>
 </html>
