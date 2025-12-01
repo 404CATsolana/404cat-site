@@ -12,7 +12,6 @@
     :root {
       --bg: #020617;
       --bg-alt: #030712;
-      --bg-soft: #020617;
       --accent: #7c3aed;
       --accent-soft: rgba(124, 58, 237, 0.35);
       --accent-2: #22c55e;
@@ -202,6 +201,7 @@
 
     .line {
       margin-bottom: 4px;
+      white-space: pre-wrap;
     }
 
     .line:last-child {
@@ -218,14 +218,6 @@
 
     .output-soft {
       color: var(--text-soft);
-    }
-
-    .tag-ok {
-      color: var(--accent-2);
-    }
-
-    .tag-warn {
-      color: var(--error);
     }
 
     .section-block {
@@ -326,10 +318,6 @@
       font-size: 11px;
     }
 
-    .log-tag {
-      color: var(--accent-2);
-    }
-
     .faq-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -392,6 +380,55 @@
       border: 1px solid rgba(55, 65, 81, 0.9);
       background: rgba(15, 23, 42, 0.96);
     }
+
+    /* ANSI-style helper colors */
+    .ansi-green {
+      color: #22c55e;
+    }
+    .ansi-yellow {
+      color: #eab308;
+    }
+    .ansi-red {
+      color: #ef4444;
+    }
+    .ansi-cyan {
+      color: #22d3ee;
+    }
+    .ansi-magenta {
+      color: #e879f9;
+    }
+    .ansi-gray {
+      color: #6b7280;
+    }
+
+    .status-tag {
+      font-size: 11px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      margin-left: 4px;
+    }
+
+    /* Blinking cursor */
+    .cursor {
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: #e5e7eb;
+      margin-left: 2px;
+      animation: blink 1s steps(2, start) infinite;
+      vertical-align: bottom;
+    }
+
+    @keyframes blink {
+      0%, 50% {
+        opacity: 1;
+      }
+      50.01%, 100% {
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -399,7 +436,6 @@
     <div class="shell-bar">
       <div class="brand">
         <div class="brand-mark">
-          <!-- Put your actual 404CAT logo file as 404cat-logo.png in the repo root -->
           <img src="404cat-logo.png" alt="404CAT logo" class="brand-logo" />
         </div>
         <div class="brand-text">
@@ -408,7 +444,8 @@
         </div>
       </div>
       <div class="shell-status">
-        <span class="dot"></span> session: prelaunch | contract_not_initiated
+        <span class="dot"></span>
+        session = prelaunch; contract = contract_not_initiated
       </div>
     </div>
   </header>
@@ -425,21 +462,51 @@
       </div>
 
       <div class="terminal-body">
-        <!-- Intro -->
+        <!-- Boot-style status -->
         <div class="line">
+          <span class="prompt">sol@node:~$</span>
+          <span class="cmd">cat /sys/status</span>
+        </div>
+        <div class="line output">
+&gt; build_id      = v0.0.1-pre
+        </div>
+        <div class="line output">
+&gt; chain         = solana
+        </div>
+        <div class="line output">
+&gt; uptime        = 00h 08m 12s
+        </div>
+        <div class="line output">
+&gt; launch_window = <span class="ansi-yellow">scanning</span>
+        </div>
+        <div class="line output">
+&gt; contract      = <span class="ansi-red">contract_not_initiated</span>
+        </div>
+
+        <!-- Intro -->
+        <div class="line" style="margin-top:8px;">
           <span class="prompt">sol@node:~$</span>
           <span class="cmd">sys.ping 404cat</span>
         </div>
         <div class="line output">
-          &gt; signal: <span class="tag-ok">online</span> | mode: token_first | utility: staged_for_reveal
+&gt; signal   = <span class="ansi-green">online</span>
+        </div>
+        <div class="line output">
+&gt; mode     = token_first
+        </div>
+        <div class="line output">
+&gt; utility  = staged_for_reveal
+        </div>
+        <div class="line output">
+&gt; latency  = 32ms
         </div>
 
-        <div class="line">
+        <div class="line" style="margin-top:4px;">
           <span class="prompt">sol@node:~$</span>
           <span class="cmd">echo "404: cat_not_found, operator located"</span>
         </div>
         <div class="line output-soft">
-          &gt; 404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
+&gt; 404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
         </div>
 
         <!-- ABOUT -->
@@ -451,7 +518,7 @@
           <div class="two-col">
             <div>
               <div class="line output-soft">
-                &gt; description:
+&gt; description:
               </div>
               <ul class="list">
                 <li>terminal flavored branding and voice, not corporate decks</li>
@@ -459,28 +526,28 @@
                 <li>no fake roadshow, just things that get shipped and used</li>
               </ul>
               <div class="pill-row">
-                <span class="pill">chain: solana</span>
-                <span class="pill">mode: token_first</span>
-                <span class="pill">voice: terminal_native</span>
+                <span class="pill">chain = solana</span>
+                <span class="pill">mode = token_first</span>
+                <span class="pill">voice = terminal_native</span>
               </div>
             </div>
             <div class="box">
               <div class="line output-soft">
-                &gt; built for:
+&gt; built_for:
               </div>
               <ul class="list">
                 <li>devs who live inside terminals and logs</li>
                 <li>degenerates who want simple tools around launches and wallets</li>
-                <li>operators who like memes that come with utilities attached</li>
+                <li>operators who like memes that arrive with utilities attached</li>
               </ul>
               <div class="line output-soft" style="margin-top:4px;">
-                &gt; requirement: enjoy the chaos, respect the craft, read the output
+&gt; requirement = enjoy the chaos; respect the craft; read the output
               </div>
             </div>
           </div>
         </div>
 
-        <!-- TOKEN -->
+        <!-- TOKEN PLAN -->
         <div class="section-block" id="token">
           <div class="section-title-line">
             <span class="prompt">sol@node:~$</span>
@@ -490,7 +557,7 @@
           <div class="two-col">
             <div>
               <div class="line output-soft">
-                &gt; status: prelaunch
+&gt; status = prelaunch
               </div>
               <ul class="list">
                 <li>contract not yet deployed, no fake copies are real</li>
@@ -499,17 +566,17 @@
               </ul>
               <div class="token-code">
                 <div><span class="key">sol@node:~$</span> cat contract.cfg</div>
-                <div>&gt; <span class="key">contract_address</span> = <span class="value">"contract_not_initiated"</span></div>
-                <div>&gt; <span class="key">launch_mode</span> = <span class="value">"arming_sequence"</span></div>
+                <div>&gt; contract_address = <span class="value">"contract_not_initiated"</span></div>
+                <div>&gt; launch_mode      = <span class="value">"arming_sequence"</span></div>
               </div>
               <div class="line output-soft" style="margin-top:6px;">
-                &gt; after deployment this block updates with the real address and a simple "how not to get tricked" checklist
+&gt; after deployment this block updates with the real address and a short "how not to get tricked" checklist
               </div>
             </div>
 
             <div class="box">
               <div class="line output-soft">
-                &gt; planned flow:
+&gt; planned_flow:
               </div>
               <ul class="list">
                 <li>phase 1: token launch and identity lock across site and socials</li>
@@ -520,7 +587,7 @@
           </div>
         </div>
 
-        <!-- UTILITY -->
+        <!-- UTILITY STACK -->
         <div class="section-block" id="utility">
           <div class="section-title-line">
             <span class="prompt">sol@node:~$</span>
@@ -530,7 +597,7 @@
           <div class="two-col">
             <div>
               <div class="line output-soft">
-                &gt; policy:
+&gt; policy:
               </div>
               <ul class="list">
                 <li>no imaginary features; utilities exist as real builds</li>
@@ -538,13 +605,13 @@
                 <li>keep interfaces simple, terminal flavored, and fast to use</li>
               </ul>
               <div class="line output-soft" style="margin-top:4px;">
-                &gt; note: first utility is already compiling in private and goes public shortly after the token comes online
+&gt; note = first utility is already compiling in private and goes public shortly after the token comes online
               </div>
             </div>
 
             <div class="box">
               <div class="line output-soft">
-                &gt; stack outline:
+&gt; stack_outline:
               </div>
               <ul class="list">
                 <li>tool_01: launch and wallet intel mvp (private until post-launch)</li>
@@ -566,7 +633,7 @@
           <div class="two-col">
             <div class="box">
               <div class="line output-soft">
-                &gt; near_term:
+&gt; near_term:
               </div>
               <ul class="list">
                 <li>finalize launch details and timing for the token</li>
@@ -577,7 +644,7 @@
             </div>
             <div class="box">
               <div class="line output-soft">
-                &gt; after_launch:
+&gt; after_launch:
               </div>
               <ul class="list">
                 <li>iterate on tools based on real feedback and data</li>
@@ -598,21 +665,21 @@
 
           <div class="logs">
             <div class="log-entry">
-              <div class="log-meta">[2025-11-30 03:42] tag: <span class="log-tag">build</span></div>
+              <div class="log-meta">[2025-11-30 03:42] tag=<span class="ansi-magenta">build</span> level=<span class="ansi-green">ok</span></div>
               <div class="log-body">
-                &gt; compiled first utility mvp. kept link dark while token arm sequence starts.
+&gt; compiled first utility mvp. kept link dark while token arm sequence starts.
               </div>
             </div>
             <div class="log-entry">
-              <div class="log-meta">[2025-11-30 10:15] tag: <span class="log-tag">site</span></div>
+              <div class="log-meta">[2025-11-30 10:15] tag=<span class="ansi-cyan">site</span> level=<span class="ansi-green">ok</span></div>
               <div class="log-body">
-                &gt; promoted landing to full console style interface. sections mounted for about, token, utility, roadmap, faq.
+&gt; promoted landing to full console style interface. mounted routes: about, token, utility, roadmap, faq.
               </div>
             </div>
             <div class="log-entry">
-              <div class="log-meta">[pending] tag: <span class="log-tag">launch</span></div>
+              <div class="log-meta">[pending] tag=<span class="ansi-yellow">launch</span> level=<span class="ansi-yellow">waiting</span></div>
               <div class="log-body">
-                &gt; contract_not_initiated. network scanning for optimal launch window. follow X and Telegram for the real address.
+&gt; contract_not_initiated. network scanning for optimal launch window. follow X and Telegram for the real address.
               </div>
             </div>
           </div>
@@ -656,11 +723,14 @@
           </div>
         </div>
 
-        <!-- Outro -->
+        <!-- Outro + cursor -->
         <div class="section-block">
           <div class="line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">echo "stay synced. real address and utilities announced live."</span>
+          </div>
+          <div class="line">
+            <span class="prompt">sol@node:~$</span><span class="cursor"></span>
           </div>
         </div>
       </div>
