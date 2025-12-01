@@ -418,7 +418,7 @@
 
     /* slower, more natural typing */
     .animate-line.typing {
-      animation: typeLine 1.8s steps(60, end) forwards;
+      animation: typeLine 2.2s steps(60, end) forwards;
     }
 
     @keyframes typeLine {
@@ -854,7 +854,7 @@
           }
         });
       },
-      { threshold: 0.25 }
+      { threshold: 0.35 }
     );
 
     lines.forEach((line) => obs.observe(line));
