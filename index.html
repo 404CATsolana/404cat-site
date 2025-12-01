@@ -190,7 +190,7 @@
     }
 
     .terminal-body {
-      padding: 10px 6px 12px;
+      padding: 10px 8px 12px;
       font-size: 12px;
       line-height: 1.5;
       text-align: left;
@@ -201,7 +201,7 @@
     }
 
     .line {
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       white-space: pre-wrap;
     }
 
@@ -511,8 +511,7 @@
 &gt; cli_hint = type <span class="ansi-cyan">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern)
       </div>
       <div class="line" id="cli-line">
-        <span class="prompt">sol@node:~$ </span>
-        <span
+        <span class="prompt">sol@node:~$ </span><span
           id="cli-echo"
           contenteditable="true"
           autocorrect="off"
@@ -525,8 +524,7 @@
       <!-- BOOT STATUS (SCROLL + TYPING) -->
       <div class="section-block" style="margin-top:10px;">
         <div class="line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">cat /sys/status</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /sys/status</span>
         </div>
         <div class="line output animate-line">
 &gt; build_id      = v0.0.1-pre
@@ -545,8 +543,7 @@
         </div>
 
         <div class="line animate-line" style="margin-top:8px;">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">sys.ping 404cat</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">sys.ping 404cat</span>
         </div>
         <div class="line output animate-line">
 &gt; signal   = online
@@ -562,8 +559,7 @@
         </div>
 
         <div class="line animate-line" style="margin-top:4px;">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">echo "404: cat_not_found, operator located"</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">echo "404: cat_not_found, operator located"</span>
         </div>
         <div class="line output-soft animate-line">
 &gt; 404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
@@ -573,8 +569,7 @@
       <!-- ABOUT -->
       <div class="section-block" id="about">
         <div class="section-title-line line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">cat /about</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /about</span>
         </div>
         <div class="two-col">
           <div>
@@ -611,8 +606,7 @@
       <!-- TOKEN PLAN -->
       <div class="section-block" id="token">
         <div class="section-title-line line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">cat /token_plan</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /token_plan</span>
         </div>
 
         <div class="two-col">
@@ -651,8 +645,7 @@
       <!-- UTILITY STACK -->
       <div class="section-block" id="utility">
         <div class="section-title-line line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">cat /utility_stack</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /utility_stack</span>
         </div>
 
         <div class="two-col">
@@ -687,8 +680,7 @@
       <!-- ROADMAP -->
       <div class="section-block" id="roadmap">
         <div class="section-title-line line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">cat /roadmap</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /roadmap</span>
         </div>
 
         <div class="two-col">
@@ -720,8 +712,7 @@
       <!-- LOGS -->
       <div class="section-block" id="logs">
         <div class="section-title-line line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">tail -n 3 /var/log/404cat.log</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">tail -n 3 /var/log/404cat.log</span>
         </div>
 
         <div class="logs">
@@ -755,8 +746,7 @@
       <!-- FAQ -->
       <div class="section-block" id="faq">
         <div class="section-title-line line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">cat /faq</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /faq</span>
         </div>
 
         <div class="faq-grid">
@@ -793,8 +783,7 @@
       <!-- OUTRO -->
       <div class="section-block">
         <div class="line animate-line">
-          <span class="prompt">sol@node:~$ </span>
-          <span class="cmd">echo "stay synced. real address and utilities announced live."</span>
+          <span class="prompt">sol@node:~$ </span><span class="cmd">echo "stay synced. real address and utilities announced live."</span>
         </div>
         <div class="line">
           <span class="prompt">sol@node:~$ </span><span class="cursor"></span>
@@ -819,102 +808,106 @@
   // footer year
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // TRUE per-character typewriter on scroll (up + down), aligned correctly
+  // TRUE per-character typewriter, sequential in DOM order
   (function () {
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!lines.length) return;
 
-    const lineMap = new WeakMap();
-
-    lines.forEach((line) => {
-      // If the line has a .cmd span, only type that part (keep prompt aligned)
+    const items = lines.map((line) => {
       let target = line.querySelector(".cmd");
       let full;
 
       if (target) {
-        // Clean command text but keep internal spacing
         full = target.textContent.replace(/^\s+/, "");
         target.textContent = "";
       } else {
-        // For plain output lines, type the whole text including ">"
         const raw = line.textContent;
-        full = raw.replace(/^\s+/, ""); // strip only leading whitespace from HTML indentation
+        full = raw.replace(/^\s+/, "");
         line.textContent = "";
         target = document.createElement("span");
         target.className = "type-text";
+        target.textContent = "";
         line.appendChild(target);
       }
 
-      lineMap.set(line, {
+      return {
         line,
         target,
         fullText: full,
         index: 0,
         typing: false,
-        interval: null,
-      });
+        done: false,
+        visible: false,
+      };
     });
 
+    let active = null;
+
     function startTyping(item) {
-      if (!item || item.typing) return;
+      if (!item || item.typing || item.done) return;
+      active = item;
       item.typing = true;
-      item.target.textContent = "";
       item.index = 0;
+      item.target.textContent = "";
 
       const speed = 22; // ms per char
-      item.interval = setInterval(() => {
+
+      const step = () => {
+        if (!item.typing) return;
         item.index++;
         item.target.textContent = item.fullText.slice(0, item.index);
         if (item.index >= item.fullText.length) {
-          clearInterval(item.interval);
-          item.interval = null;
           item.typing = false;
+          item.done = true;
+          active = null;
+          scheduleNext();
+        } else {
+          setTimeout(step, speed);
         }
-      }, speed);
+      };
+
+      setTimeout(step, speed);
     }
 
-    function stopTyping(item) {
-      if (!item) return;
-      if (item.interval) {
-        clearInterval(item.interval);
-        item.interval = null;
+    function scheduleNext() {
+      if (active) return;
+
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        if (it.visible && !it.done && !it.typing) {
+          it.line.classList.add("visible");
+          startTyping(it);
+          break;
+        }
       }
-      item.typing = false;
     }
 
     if (!("IntersectionObserver" in window)) {
-      // fallback: just type everything once on load
-      lines.forEach((line) => {
-        const item = lineMap.get(line);
-        if (!item) return;
-        line.classList.add("visible");
-        startTyping(item);
+      // no IO support: just type everything once in order
+      items.forEach((it) => {
+        it.visible = true;
       });
+      scheduleNext();
       return;
     }
 
-    const obs = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const line = entry.target;
-          const item = lineMap.get(line);
-          if (!item) return;
-
-          if (entry.isIntersecting) {
-            line.classList.add("visible");
-            // retype each time it comes back into view
-            stopTyping(item);
-            startTyping(item);
-          } else {
-            // stop when out of view; will restart from beginning on re-entry
-            stopTyping(item);
+          const idx = lines.indexOf(entry.target);
+          if (idx === -1) return;
+          const it = items[idx];
+          it.visible = entry.isIntersecting;
+          if (it.visible) {
+            it.line.classList.add("visible");
           }
         });
+        scheduleNext();
       },
-      { threshold: 0.6 } // need ~60% in view to trigger; reduces jitter
+      { threshold: 0.4 }
     );
 
-    lines.forEach((line) => obs.observe(line));
+    lines.forEach((line) => observer.observe(line));
   })();
 
   // interactive CLI using contenteditable span
