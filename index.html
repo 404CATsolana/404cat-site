@@ -422,7 +422,18 @@
       }
     }
 
-    /* Vintage CRT theme toggle */
+    /* Scroll typing */
+    .animate-line {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    .animate-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.16s linear, transform 0.16s linear;
+    }
+
+    /* Vintage CRT theme */
     body.theme-vintage {
       --bg: #020b03;
       --bg-alt: #020805;
@@ -483,11 +494,7 @@
     }
 
     #cli-output {
-      margin-bottom: 4px;
-    }
-
-    #cli-output .output-soft {
-      color: var(--text-soft);
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -522,62 +529,81 @@
       </div>
 
       <div class="terminal-body">
-        <!-- Boot-style status -->
-        <div class="line">
+        <!-- Boot-style status (scroll-typed) -->
+        <div class="line animate-line">
           <span class="prompt">sol@node:~$</span>
           <span class="cmd">cat /sys/status</span>
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; build_id      = v0.0.1-pre
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; chain         = solana
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; uptime        = 00h 08m 12s
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; launch_window = <span class="ansi-yellow">scanning</span>
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; contract      = <span class="ansi-red">contract_not_initiated</span>
         </div>
 
-        <!-- Intro -->
-        <div class="line" style="margin-top:8px;">
+        <!-- Intro ping (scroll-typed) -->
+        <div class="line animate-line" style="margin-top:8px;">
           <span class="prompt">sol@node:~$</span>
           <span class="cmd">sys.ping 404cat</span>
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; signal   = <span class="ansi-green">online</span>
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; mode     = token_first
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; utility  = staged_for_reveal
         </div>
-        <div class="line output">
+        <div class="line output animate-line">
 &gt; latency  = 32ms
         </div>
 
-        <div class="line" style="margin-top:4px;">
+        <div class="line animate-line" style="margin-top:4px;">
           <span class="prompt">sol@node:~$</span>
           <span class="cmd">echo "404: cat_not_found, operator located"</span>
         </div>
-        <div class="line output-soft">
+        <div class="line output-soft animate-line">
 &gt; 404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
+        </div>
+
+        <!-- Interactive CLI (quick nav + themes) -->
+        <div class="section-block" style="border-top:none; padding-top:10px; margin-top:6px;">
+          <div class="line output-soft">
+&gt; cli_hint = type <span class="ansi-cyan">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern)
+          </div>
+          <div class="line" id="cli-line">
+            <span class="prompt">sol@node:~$</span>
+            <span id="cli-echo"></span><span class="cursor"></span>
+          </div>
+          <div class="line output-soft" id="cli-output"></div>
+          <input
+            id="cli-input"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+          />
         </div>
 
         <!-- ABOUT -->
         <div class="section-block" id="about">
-          <div class="section-title-line">
+          <div class="section-title-line line animate-line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">cat /about</span>
           </div>
           <div class="two-col">
             <div>
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; description:
               </div>
               <ul class="list">
@@ -592,7 +618,7 @@
               </div>
             </div>
             <div class="box">
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; built_for:
               </div>
               <ul class="list">
@@ -600,7 +626,7 @@
                 <li>degenerates who want simple tools around launches and wallets</li>
                 <li>operators who like memes that arrive with utilities attached</li>
               </ul>
-              <div class="line output-soft" style="margin-top:4px;">
+              <div class="line output-soft animate-line" style="margin-top:4px;">
 &gt; requirement = enjoy the chaos; respect the craft; read the output
               </div>
             </div>
@@ -609,14 +635,14 @@
 
         <!-- TOKEN PLAN -->
         <div class="section-block" id="token">
-          <div class="section-title-line">
+          <div class="section-title-line line animate-line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">cat /token_plan</span>
           </div>
 
           <div class="two-col">
             <div>
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; status = prelaunch
               </div>
               <ul class="list">
@@ -629,13 +655,13 @@
                 <div>&gt; contract_address = <span class="value">"contract_not_initiated"</span></div>
                 <div>&gt; launch_mode      = <span class="value">"arming_sequence"</span></div>
               </div>
-              <div class="line output-soft" style="margin-top:6px;">
+              <div class="line output-soft animate-line" style="margin-top:6px;">
 &gt; after deployment this block updates with the real address and a short "how not to get tricked" checklist
               </div>
             </div>
 
             <div class="box">
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; planned_flow:
               </div>
               <ul class="list">
@@ -649,14 +675,14 @@
 
         <!-- UTILITY STACK -->
         <div class="section-block" id="utility">
-          <div class="section-title-line">
+          <div class="section-title-line line animate-line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">cat /utility_stack</span>
           </div>
 
           <div class="two-col">
             <div>
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; policy:
               </div>
               <ul class="list">
@@ -664,13 +690,13 @@
                 <li>focus on Solana launches and wallet behavior</li>
                 <li>keep interfaces simple, terminal flavored, and fast to use</li>
               </ul>
-              <div class="line output-soft" style="margin-top:4px;">
+              <div class="line output-soft animate-line" style="margin-top:4px;">
 &gt; note = first utility is already compiling in private and goes public shortly after the token comes online
               </div>
             </div>
 
             <div class="box">
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; stack_outline:
               </div>
               <ul class="list">
@@ -685,14 +711,14 @@
 
         <!-- ROADMAP -->
         <div class="section-block" id="roadmap">
-          <div class="section-title-line">
+          <div class="section-title-line line animate-line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">cat /roadmap</span>
           </div>
 
           <div class="two-col">
             <div class="box">
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; near_term:
               </div>
               <ul class="list">
@@ -703,7 +729,7 @@
               </ul>
             </div>
             <div class="box">
-              <div class="line output-soft">
+              <div class="line output-soft animate-line">
 &gt; after_launch:
               </div>
               <ul class="list">
@@ -718,27 +744,33 @@
 
         <!-- LOGS -->
         <div class="section-block" id="logs">
-          <div class="section-title-line">
+          <div class="section-title-line line animate-line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">tail -n 3 /var/log/404cat.log</span>
           </div>
 
           <div class="logs">
             <div class="log-entry">
-              <div class="log-meta">[2025-11-30 03:42] tag=<span class="ansi-magenta">build</span> level=<span class="ansi-green">ok</span></div>
-              <div class="log-body">
+              <div class="log-meta">
+[2025-11-30 03:42] tag=<span class="ansi-magenta">build</span> level=<span class="ansi-green">ok</span>
+              </div>
+              <div class="log-body line animate-line">
 &gt; compiled first utility mvp. kept link dark while token arm sequence starts.
               </div>
             </div>
             <div class="log-entry">
-              <div class="log-meta">[2025-11-30 10:15] tag=<span class="ansi-cyan">site</span> level=<span class="ansi-green">ok</span></div>
-              <div class="log-body">
+              <div class="log-meta">
+[2025-11-30 10:15] tag=<span class="ansi-cyan">site</span> level=<span class="ansi-green">ok</span>
+              </div>
+              <div class="log-body line animate-line">
 &gt; promoted landing to full console style interface. mounted routes: about, token, utility, roadmap, faq.
               </div>
             </div>
             <div class="log-entry">
-              <div class="log-meta">[pending] tag=<span class="ansi-yellow">launch</span> level=<span class="ansi-yellow">waiting</span></div>
-              <div class="log-body">
+              <div class="log-meta">
+[pending] tag=<span class="ansi-yellow">launch</span> level=<span class="ansi-yellow">waiting</span>
+              </div>
+              <div class="log-body line animate-line">
 &gt; contract_not_initiated. network scanning for optimal launch window. follow X and Telegram for the real address.
               </div>
             </div>
@@ -747,7 +779,7 @@
 
         <!-- FAQ -->
         <div class="section-block" id="faq">
-          <div class="section-title-line">
+          <div class="section-title-line line animate-line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">cat /faq</span>
           </div>
@@ -785,24 +817,13 @@
 
         <!-- Outro -->
         <div class="section-block">
-          <div class="line">
+          <div class="line animate-line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">echo "stay synced. real address and utilities announced live."</span>
           </div>
-          <div class="line output-soft" id="cli-output"></div>
-
-          <!-- Interactive CLI line -->
-          <div class="line" id="cli-line">
-            <span class="prompt">sol@node:~$</span>
-            <span id="cli-echo"></span><span class="cursor"></span>
+          <div class="line">
+            <span class="prompt">sol@node:~$</span><span class="cursor"></span>
           </div>
-          <input
-            id="cli-input"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="none"
-            spellcheck="false"
-          />
         </div>
       </div>
     </div>
@@ -820,94 +841,176 @@
   </footer>
 
   <script>
-    // year
+    // footer year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    const cliInput = document.getElementById("cli-input");
-    const cliEcho = document.getElementById("cli-echo");
-    const cliOutput = document.getElementById("cli-output");
-    const cliLine = document.getElementById("cli-line");
-
-    function setOutput(text) {
-      if (!text) {
-        cliOutput.textContent = "";
-        return;
-      }
-      cliOutput.innerHTML = '&gt; ' + text;
-      cliOutput.className = "line output-soft";
-    }
-
-    function handleCommand(cmdRaw) {
-      const cmd = cmdRaw.trim();
-      if (!cmd) {
-        setOutput("");
+    // scroll typing: reveal .animate-line elements section by section
+    (function () {
+      const lines = Array.from(document.querySelectorAll(".animate-line"));
+      if (!("IntersectionObserver" in window) || lines.length === 0) {
+        lines.forEach((l) => l.classList.add("visible"));
         return;
       }
 
-      if (cmd === "help" || cmd === "?") {
-        setOutput('available: help, links, roadmap, faq, clear, theme vintage, theme modern');
-        return;
+      // Group lines by nearest section-block (or root)
+      const sections = new Map();
+      lines.forEach((line) => {
+        let parent = line.closest(".section-block");
+        const key = parent ? parent : document.querySelector(".terminal-body");
+        if (!sections.has(key)) sections.set(key, []);
+        sections.get(key).push(line);
+      });
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const section = entry.target;
+            const sectionLines = sections.get(section) || [];
+            if (!sectionLines.length) return;
+
+            // prevent double animation
+            sections.set(section, []);
+
+            sectionLines.forEach((line, idx) => {
+              setTimeout(() => {
+                line.classList.add("visible");
+              }, idx * 70); // 70ms per line stagger
+            });
+          });
+        },
+        {
+          root: null,
+          threshold: 0.15,
+        }
+      );
+
+      const terminalBody = document.querySelector(".terminal-body");
+      if (terminalBody) obs.observe(terminalBody);
+
+      sections.forEach((_lines, section) => {
+        if (section !== terminalBody) {
+          obs.observe(section);
+        }
+      });
+    })();
+
+    // interactive CLI: navigation + themes
+    (function () {
+      const cliInput = document.getElementById("cli-input");
+      const cliEcho = document.getElementById("cli-echo");
+      const cliOutput = document.getElementById("cli-output");
+      const cliLine = document.getElementById("cli-line");
+
+      function setOutput(text) {
+        if (!text) {
+          cliOutput.textContent = "";
+          return;
+        }
+        cliOutput.innerHTML = '&gt; ' + text;
       }
 
-      if (cmd === "links") {
-        setOutput('X: @404CATsolana | TG: t.me/cat_not_found');
-        return;
+      function jumpTo(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
       }
 
-      if (cmd === "roadmap") {
-        document.getElementById("roadmap")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        setOutput('jumped to /roadmap');
-        return;
+      function handleCommand(raw) {
+        const cmd = raw.trim();
+        if (!cmd) {
+          setOutput("");
+          return;
+        }
+
+        if (cmd === "help" || cmd === "?") {
+          setOutput("available: help, links, about, token, utility, roadmap, faq, logs, clear, theme vintage, theme modern");
+          return;
+        }
+
+        if (cmd === "links") {
+          setOutput("X: @404CATsolana | TG: t.me/cat_not_found");
+          return;
+        }
+
+        if (cmd === "about") {
+          jumpTo("about");
+          setOutput("jumped to /about");
+          return;
+        }
+
+        if (cmd === "token") {
+          jumpTo("token");
+          setOutput("jumped to /token_plan");
+          return;
+        }
+
+        if (cmd === "utility") {
+          jumpTo("utility");
+          setOutput("jumped to /utility_stack");
+          return;
+        }
+
+        if (cmd === "roadmap") {
+          jumpTo("roadmap");
+          setOutput("jumped to /roadmap");
+          return;
+        }
+
+        if (cmd === "faq") {
+          jumpTo("faq");
+          setOutput("jumped to /faq");
+          return;
+        }
+
+        if (cmd === "logs") {
+          jumpTo("logs");
+          setOutput("jumped to /var/log/404cat.log");
+          return;
+        }
+
+        if (cmd === "clear") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          setOutput("screen cleared (scroll reset)");
+          return;
+        }
+
+        if (cmd === "theme vintage") {
+          document.body.classList.add("theme-vintage");
+          setOutput("theme set to vintage_crt");
+          return;
+        }
+
+        if (cmd === "theme modern") {
+          document.body.classList.remove("theme-vintage");
+          setOutput("theme set to modern_dark");
+          return;
+        }
+
+        setOutput("command not found: " + cmd);
       }
 
-      if (cmd === "faq") {
-        document.getElementById("faq")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        setOutput('jumped to /faq');
-        return;
-      }
+      cliLine.addEventListener("click", () => {
+        cliInput.focus();
+      });
 
-      if (cmd === "clear") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        setOutput('screen cleared (scroll reset)');
-        return;
-      }
+      cliInput.addEventListener("input", () => {
+        cliEcho.textContent = cliInput.value;
+      });
 
-      if (cmd === "theme vintage") {
-        document.body.classList.add("theme-vintage");
-        setOutput('theme set to vintage_crt');
-        return;
-      }
+      cliInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleCommand(cliInput.value);
+          cliInput.value = "";
+          cliEcho.textContent = "";
+        }
+      });
 
-      if (cmd === "theme modern") {
-        document.body.classList.remove("theme-vintage");
-        setOutput('theme set to modern_dark');
-        return;
-      }
-
-      setOutput('command not found: ' + cmd);
-    }
-
-    cliLine.addEventListener("click", () => {
-      cliInput.focus();
-    });
-
-    cliInput.addEventListener("input", () => {
-      cliEcho.textContent = cliInput.value;
-    });
-
-    cliInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleCommand(cliInput.value);
-        cliInput.value = "";
-        cliEcho.textContent = "";
-      }
-    });
-
-    // autofocus once on load (safe even on mobile)
-    window.addEventListener("load", () => {
-      cliInput.focus();
-    });
+      window.addEventListener("load", () => {
+        cliInput.focus();
+      });
+    })();
   </script>
 </body>
 </html>
