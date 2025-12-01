@@ -404,7 +404,7 @@
       50.01%, 100% { opacity: 0; }
     }
 
-    /* Scroll typing */
+    /* Scroll typing – line by line */
     .animate-line {
       opacity: 0;
       max-width: 0;
@@ -416,9 +416,9 @@
       opacity: 1;
     }
 
-    /* slower, more natural typing */
     .animate-line.typing {
-      animation: typeLine 2.2s steps(60, end) forwards;
+      /* longer duration + more steps = smoother, more "per char" feel */
+      animation: typeLine 2.4s steps(80, end) forwards;
     }
 
     @keyframes typeLine {
@@ -825,7 +825,7 @@
   // footer year
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // scroll typing: retype lines as they enter viewport
+  // scroll typing: each line types once when it first enters viewport
   (function () {
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!("IntersectionObserver" in window) || !lines.length) {
@@ -838,23 +838,14 @@
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
           const el = entry.target;
-
-          if (entry.isIntersecting) {
-            // show line and restart typing animation
-            el.classList.add("visible");
-            el.classList.remove("typing");
-            el.style.maxWidth = "0ch"; // reset so re-typing is visible
-            void el.offsetWidth;       // force reflow
-            el.classList.add("typing");
-          } else {
-            // when it leaves view, prep it to type again next time
-            el.classList.remove("typing");
-            el.style.maxWidth = "0ch";
-          }
+          el.classList.add("visible", "typing");
+          // only animate once to avoid flicker when hovering between sections
+          obs.unobserve(el);
         });
       },
-      { threshold: 0.35 }
+      { threshold: 0.15 }
     );
 
     lines.forEach((line) => obs.observe(line));
