@@ -143,6 +143,7 @@
     }
 
     .terminal-shell {
+      position: relative;
       border-radius: 10px;
       border: 1px solid rgba(31, 41, 55, 0.95);
       background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.98));
@@ -401,15 +402,6 @@
       color: #6b7280;
     }
 
-    .status-tag {
-      font-size: 11px;
-      padding: 1px 5px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.96);
-      margin-left: 4px;
-    }
-
     /* Blinking cursor */
     .cursor {
       display: inline-block;
@@ -428,6 +420,74 @@
       50.01%, 100% {
         opacity: 0;
       }
+    }
+
+    /* Vintage CRT theme toggle */
+    body.theme-vintage {
+      --bg: #020b03;
+      --bg-alt: #020805;
+      --accent-2: #4ade80;
+      --text: #bbf7d0;
+      --text-soft: #6ee7b7;
+      --border: #064e3b;
+    }
+
+    body.theme-vintage .terminal-shell {
+      background: radial-gradient(circle at top left, #001b10, #000000);
+      box-shadow: 0 0 40px rgba(16, 185, 129, 0.45);
+      filter: contrast(1.08) saturate(0.9);
+    }
+
+    body.theme-vintage .terminal-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(15, 118, 110, 0.18) 1px,
+        transparent 1px
+      );
+      background-size: 100% 2px;
+      mix-blend-mode: soft-light;
+      opacity: 0.85;
+    }
+
+    body.theme-vintage .terminal-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at top, rgba(190, 242, 100, 0.22), transparent 55%);
+    }
+
+    body.theme-vintage .prompt {
+      color: #86efac;
+    }
+
+    body.theme-vintage .cursor {
+      background: #bbf7d0;
+    }
+
+    /* CLI input (hidden) */
+    #cli-input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      height: 0;
+      width: 0;
+    }
+
+    #cli-line {
+      cursor: text;
+    }
+
+    #cli-output {
+      margin-bottom: 4px;
+    }
+
+    #cli-output .output-soft {
+      color: var(--text-soft);
     }
   </style>
 </head>
@@ -723,15 +783,26 @@
           </div>
         </div>
 
-        <!-- Outro + cursor -->
+        <!-- Outro -->
         <div class="section-block">
           <div class="line">
             <span class="prompt">sol@node:~$</span>
             <span class="cmd">echo "stay synced. real address and utilities announced live."</span>
           </div>
-          <div class="line">
-            <span class="prompt">sol@node:~$</span><span class="cursor"></span>
+          <div class="line output-soft" id="cli-output"></div>
+
+          <!-- Interactive CLI line -->
+          <div class="line" id="cli-line">
+            <span class="prompt">sol@node:~$</span>
+            <span id="cli-echo"></span><span class="cursor"></span>
           </div>
+          <input
+            id="cli-input"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+          />
         </div>
       </div>
     </div>
@@ -749,7 +820,94 @@
   </footer>
 
   <script>
+    // year
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    const cliInput = document.getElementById("cli-input");
+    const cliEcho = document.getElementById("cli-echo");
+    const cliOutput = document.getElementById("cli-output");
+    const cliLine = document.getElementById("cli-line");
+
+    function setOutput(text) {
+      if (!text) {
+        cliOutput.textContent = "";
+        return;
+      }
+      cliOutput.innerHTML = '&gt; ' + text;
+      cliOutput.className = "line output-soft";
+    }
+
+    function handleCommand(cmdRaw) {
+      const cmd = cmdRaw.trim();
+      if (!cmd) {
+        setOutput("");
+        return;
+      }
+
+      if (cmd === "help" || cmd === "?") {
+        setOutput('available: help, links, roadmap, faq, clear, theme vintage, theme modern');
+        return;
+      }
+
+      if (cmd === "links") {
+        setOutput('X: @404CATsolana | TG: t.me/cat_not_found');
+        return;
+      }
+
+      if (cmd === "roadmap") {
+        document.getElementById("roadmap")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        setOutput('jumped to /roadmap');
+        return;
+      }
+
+      if (cmd === "faq") {
+        document.getElementById("faq")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        setOutput('jumped to /faq');
+        return;
+      }
+
+      if (cmd === "clear") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setOutput('screen cleared (scroll reset)');
+        return;
+      }
+
+      if (cmd === "theme vintage") {
+        document.body.classList.add("theme-vintage");
+        setOutput('theme set to vintage_crt');
+        return;
+      }
+
+      if (cmd === "theme modern") {
+        document.body.classList.remove("theme-vintage");
+        setOutput('theme set to modern_dark');
+        return;
+      }
+
+      setOutput('command not found: ' + cmd);
+    }
+
+    cliLine.addEventListener("click", () => {
+      cliInput.focus();
+    });
+
+    cliInput.addEventListener("input", () => {
+      cliEcho.textContent = cliInput.value;
+    });
+
+    cliInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleCommand(cliInput.value);
+        cliInput.value = "";
+        cliEcho.textContent = "";
+      }
+    });
+
+    // autofocus once on load (safe even on mobile)
+    window.addEventListener("load", () => {
+      cliInput.focus();
+    });
   </script>
 </body>
 </html>
