@@ -416,8 +416,9 @@
       opacity: 1;
     }
 
+    /* slower, more natural typing */
     .animate-line.typing {
-      animation: typeLine 0.9s steps(55, end) forwards;
+      animation: typeLine 1.8s steps(60, end) forwards;
     }
 
     @keyframes typeLine {
@@ -824,7 +825,7 @@
   // footer year
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // scroll typing: reveal + typewriter for each .animate-line
+  // scroll typing: retype lines as they enter viewport
   (function () {
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!("IntersectionObserver" in window) || !lines.length) {
@@ -837,13 +838,23 @@
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
           const el = entry.target;
-          el.classList.add("visible", "typing");
-          obs.unobserve(el);
+
+          if (entry.isIntersecting) {
+            // show line and restart typing animation
+            el.classList.add("visible");
+            el.classList.remove("typing");
+            el.style.maxWidth = "0ch"; // reset so re-typing is visible
+            void el.offsetWidth;       // force reflow
+            el.classList.add("typing");
+          } else {
+            // when it leaves view, prep it to type again next time
+            el.classList.remove("typing");
+            el.style.maxWidth = "0ch";
+          }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.25 }
     );
 
     lines.forEach((line) => obs.observe(line));
