@@ -63,7 +63,7 @@
     .shell-bar {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 8px 12px;
+      padding: 8px 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -137,7 +137,7 @@
     .page {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 12px 8px 48px;
+      padding: 12px 6px 48px;
       flex: 1;
     }
 
@@ -190,7 +190,7 @@
     }
 
     .terminal-body {
-      padding: 10px 8px 12px;
+      padding: 10px 6px 12px 6px;
       font-size: 12px;
       line-height: 1.5;
       text-align: left;
@@ -382,14 +382,12 @@
       background: rgba(15, 23, 42, 0.96);
     }
 
-    /* ANSI helper colors */
     .ansi-green { color: #22c55e; }
     .ansi-yellow { color: #eab308; }
     .ansi-red { color: #ef4444; }
     .ansi-cyan { color: #22d3ee; }
     .ansi-magenta { color: #e879f9; }
 
-    /* Cursor */
     .cursor {
       display: inline-block;
       width: 7px;
@@ -405,7 +403,6 @@
       50.01%, 100% { opacity: 0; }
     }
 
-    /* Scroll typing – JS per-character */
     .animate-line {
       opacity: 0;
       white-space: pre-wrap;
@@ -420,7 +417,6 @@
       white-space: pre-wrap;
     }
 
-    /* Vintage CRT theme */
     body.theme-vintage {
       --bg: #020b03;
       --bg-alt: #020805;
@@ -467,7 +463,6 @@
       background: #bbf7d0;
     }
 
-    /* CLI editable span */
     #cli-echo {
       outline: none;
       min-width: 3px;
@@ -506,7 +501,7 @@
     </div>
 
     <div class="terminal-body">
-      <!-- LIVE CLI AT TOP -->
+      <!-- LIVE CLI -->
       <div class="line output-soft">
 &gt; cli_hint = type <span class="ansi-cyan">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern)
       </div>
@@ -521,8 +516,8 @@
       </div>
       <div class="line output-soft" id="cli-output"></div>
 
-      <!-- BOOT STATUS (SCROLL + TYPING) -->
-      <div class="section-block" style="margin-top:10px;">
+      <!-- SYS STATUS -->
+      <div class="section-block">
         <div class="line animate-line">
           <span class="prompt">sol@node:~$ </span><span class="cmd">cat /sys/status</span>
         </div>
@@ -577,14 +572,14 @@
 &gt; description:
             </div>
             <ul class="list">
-              <li>terminal flavored branding and voice, not corporate decks</li>
-              <li>token as the identity layer, utilities wired in after launch</li>
-              <li>no fake roadshow, just things that get shipped and used</li>
+              <li class="animate-line">terminal flavored branding and voice, not corporate decks</li>
+              <li class="animate-line">token as the identity layer, utilities wired in after launch</li>
+              <li class="animate-line">no fake roadshow, just things that get shipped and used</li>
             </ul>
             <div class="pill-row">
-              <span class="pill">chain = solana</span>
-              <span class="pill">mode = token_first</span>
-              <span class="pill">voice = terminal_native</span>
+              <span class="pill animate-line">chain = solana</span>
+              <span class="pill animate-line">mode = token_first</span>
+              <span class="pill animate-line">voice = terminal_native</span>
             </div>
           </div>
           <div class="box">
@@ -592,9 +587,9 @@
 &gt; built_for:
             </div>
             <ul class="list">
-              <li>devs who live inside terminals and logs</li>
-              <li>degenerates who want simple tools around launches and wallets</li>
-              <li>operators who like memes that arrive with utilities attached</li>
+              <li class="animate-line">devs who live inside terminals and logs</li>
+              <li class="animate-line">degenerates who want simple tools around launches and wallets</li>
+              <li class="animate-line">operators who like memes that arrive with utilities attached</li>
             </ul>
             <div class="line output-soft animate-line" style="margin-top:4px;">
 &gt; requirement = enjoy the chaos; respect the craft; read the output
@@ -615,11 +610,11 @@
 &gt; status = prelaunch
             </div>
             <ul class="list">
-              <li>contract not yet deployed, no fake copies are real</li>
-              <li>token comes online first, then utilities link into it</li>
-              <li>no talk of raises or venture slices, focus stays on flow</li>
+              <li class="animate-line">contract not yet deployed, no fake copies are real</li>
+              <li class="animate-line">token comes online first, then utilities link into it</li>
+              <li class="animate-line">no talk of raises or venture slices, focus stays on flow</li>
             </ul>
-            <div class="token-code">
+            <div class="token-code animate-line">
               <div><span class="key">sol@node:~$</span> cat contract.cfg</div>
               <div>&gt; contract_address = <span class="value">"contract_not_initiated"</span></div>
               <div>&gt; launch_mode      = <span class="value">"arming_sequence"</span></div>
@@ -634,9 +629,9 @@
 &gt; planned_flow:
             </div>
             <ul class="list">
-              <li>phase 1: token launch and identity lock across site and socials</li>
-              <li>phase 2: first utility revealed and opened to the community</li>
-              <li>phase 3: deeper hooks and small perks for active holders</li>
+              <li class="animate-line">phase 1: token launch and identity lock across site and socials</li>
+              <li class="animate-line">phase 2: first utility revealed and opened to the community</li>
+              <li class="animate-line">phase 3: deeper hooks and small perks for active holders</li>
             </ul>
           </div>
         </div>
@@ -654,9 +649,9 @@
 &gt; policy:
             </div>
             <ul class="list">
-              <li>no imaginary features; utilities exist as real builds</li>
-              <li>focus on Solana launches and wallet behavior</li>
-              <li>keep interfaces simple, terminal flavored, and fast to use</li>
+              <li class="animate-line">no imaginary features; utilities exist as real builds</li>
+              <li class="animate-line">focus on Solana launches and wallet behavior</li>
+              <li class="animate-line">keep interfaces simple, terminal flavored, and fast to use</li>
             </ul>
             <div class="line output-soft animate-line" style="margin-top:4px;">
 &gt; note = first utility is already compiling in private and goes public shortly after the token comes online
@@ -668,10 +663,10 @@
 &gt; stack_outline:
             </div>
             <ul class="list">
-              <li>tool_01: launch and wallet intel mvp (private until post-launch)</li>
-              <li>tool_02: overlay style view for quick risk notes and context</li>
-              <li>tool_03: low noise alert flow routed through Telegram</li>
-              <li>tool_04: small dev toys and side experiments from late cycles</li>
+              <li class="animate-line">tool_01: launch and wallet intel mvp (private until post-launch)</li>
+              <li class="animate-line">tool_02: overlay style view for quick risk notes and context</li>
+              <li class="animate-line">tool_03: low noise alert flow routed through Telegram</li>
+              <li class="animate-line">tool_04: small dev toys and side experiments from late cycles</li>
             </ul>
           </div>
         </div>
@@ -689,10 +684,10 @@
 &gt; near_term:
             </div>
             <ul class="list">
-              <li>finalize launch details and timing for the token</li>
-              <li>deploy contract and update all public surfaces with the real address</li>
-              <li>turn on the first utility endpoint for the community</li>
-              <li>publish a short usage note so nobody has to guess how it works</li>
+              <li class="animate-line">finalize launch details and timing for the token</li>
+              <li class="animate-line">deploy contract and update all public surfaces with the real address</li>
+              <li class="animate-line">turn on the first utility endpoint for the community</li>
+              <li class="animate-line">publish a short usage note so nobody has to guess how it works</li>
             </ul>
           </div>
           <div class="box">
@@ -700,10 +695,10 @@
 &gt; after_launch:
             </div>
             <ul class="list">
-              <li>iterate on tools based on real feedback and data</li>
-              <li>expand overlay and alert features in a controlled way</li>
-              <li>keep everything terminal native, avoid overdesigned clutter</li>
-              <li>if it stops feeling fun or authentic, refactor it</li>
+              <li class="animate-line">iterate on tools based on real feedback and data</li>
+              <li class="animate-line">expand overlay and alert features in a controlled way</li>
+              <li class="animate-line">keep everything terminal native, avoid overdesigned clutter</li>
+              <li class="animate-line">if it stops feeling fun or authentic, refactor it</li>
             </ul>
           </div>
         </div>
@@ -717,7 +712,7 @@
 
         <div class="logs">
           <div class="log-entry">
-            <div class="log-meta">
+            <div class="log-meta animate-line">
 [2025-11-30 03:42] tag=<span class="ansi-magenta">build</span> level=<span class="ansi-green">ok</span>
             </div>
             <div class="log-body line animate-line">
@@ -725,7 +720,7 @@
             </div>
           </div>
           <div class="log-entry">
-            <div class="log-meta">
+            <div class="log-meta animate-line">
 [2025-11-30 10:15] tag=<span class="ansi-cyan">site</span> level=<span class="ansi-green">ok</span>
             </div>
             <div class="log-body line animate-line">
@@ -733,7 +728,7 @@
             </div>
           </div>
           <div class="log-entry">
-            <div class="log-meta">
+            <div class="log-meta animate-line">
 [pending] tag=<span class="ansi-yellow">launch</span> level=<span class="ansi-yellow">waiting</span>
             </div>
             <div class="log-body line animate-line">
@@ -751,26 +746,26 @@
 
         <div class="faq-grid">
           <div class="faq-item">
-            <div class="faq-q">is the token live</div>
-            <div class="faq-a">
+            <div class="faq-q animate-line">is the token live</div>
+            <div class="faq-a animate-line">
               not yet. when it is live, the real contract address will be displayed here and on the 404CAT X profile. if it is not in both places, it is not the real one.
             </div>
           </div>
           <div class="faq-item">
-            <div class="faq-q">what about utilities</div>
-            <div class="faq-a">
+            <div class="faq-q animate-line">what about utilities</div>
+            <div class="faq-a animate-line">
               utilities are already in progress. the first one opens shortly after launch and more arrive as they are tested and hardened. no giant promises, just builds.
             </div>
           </div>
           <div class="faq-item">
-            <div class="faq-q">why token first</div>
-            <div class="faq-a">
+            <div class="faq-q animate-line">why token first</div>
+            <div class="faq-a animate-line">
               the token is the identity anchor. once it exists and is verified, utilities can plug into it cleanly and the rest of the stack can grow without confusion.
             </div>
           </div>
           <div class="faq-item">
-            <div class="faq-q">where do i stay updated</div>
-            <div class="faq-a">
+            <div class="faq-q animate-line">where do i stay updated</div>
+            <div class="faq-a animate-line">
               main signal routes are X and Telegram:
               <br />
               - X: <a href="https://x.com/404CATsolana" target="_blank" rel="noopener">@404CATsolana</a><br />
@@ -808,7 +803,7 @@
   // footer year
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // TRUE per-character typewriter, sequential in DOM order
+  // TYPEWRITER
   (function () {
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!lines.length) return;
@@ -850,7 +845,7 @@
       item.index = 0;
       item.target.textContent = "";
 
-      const speed = 22; // ms per char
+      const speed = 22;
 
       const step = () => {
         if (!item.typing) return;
@@ -871,7 +866,6 @@
 
     function scheduleNext() {
       if (active) return;
-
       for (let i = 0; i < items.length; i++) {
         const it = items[i];
         if (it.visible && !it.done && !it.typing) {
@@ -883,7 +877,6 @@
     }
 
     if (!("IntersectionObserver" in window)) {
-      // no IO support: just type everything once in order
       items.forEach((it) => {
         it.visible = true;
       });
@@ -897,31 +890,30 @@
           const idx = lines.indexOf(entry.target);
           if (idx === -1) return;
           const it = items[idx];
-          it.visible = entry.isIntersecting;
+          it.visible = entry.isIntersecting && entry.intersectionRatio >= 0.7;
           if (it.visible) {
             it.line.classList.add("visible");
           }
         });
         scheduleNext();
       },
-      { threshold: 0.4 }
+      {
+        threshold: 0.7,
+        rootMargin: "0px 0px -15% 0px",
+      }
     );
 
     lines.forEach((line) => observer.observe(line));
   })();
 
-  // interactive CLI using contenteditable span
+  // INTERACTIVE CLI
   (function () {
     const cliEcho = document.getElementById("cli-echo");
     const cliOutput = document.getElementById("cli-output");
     const cliLine = document.getElementById("cli-line");
 
     function setOutput(text) {
-      if (!text) {
-        cliOutput.textContent = "";
-        return;
-      }
-      cliOutput.textContent = "> " + text;
+      cliOutput.textContent = text ? "> " + text : "";
     }
 
     function jumpTo(id) {
