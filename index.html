@@ -190,7 +190,7 @@
     }
 
     .terminal-body {
-      padding: 10px 6px 12px 10px; /* LEFT = 10px baseline */
+      padding: 10px 6px 12px 6px;
       font-size: 12px;
       line-height: 1.5;
       text-align: left;
@@ -268,7 +268,7 @@
 
     .token-code {
       font-size: 11px;
-      padding: 6px 8px 6px 10px; /* align with baseline */
+      padding: 6px 8px;
       border-radius: 6px;
       background: rgba(15, 23, 42, 0.96);
       border: 1px dashed rgba(75, 85, 99, 0.9);
@@ -301,14 +301,14 @@
       border-radius: var(--radius-sm);
       border: 1px solid rgba(31, 41, 55, 0.95);
       background: rgba(15, 23, 42, 0.96);
-      padding: 8px 8px 6px 10px; /* LEFT = 10px */
+      padding: 8px 8px 6px;
     }
 
     .logs {
       margin-top: 6px;
       border-radius: var(--radius-sm);
       border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 6px 8px 6px 10px; /* LEFT = 10px */
+      padding: 6px 8px;
     }
 
     .log-entry {
@@ -345,7 +345,7 @@
     .faq-item {
       border-radius: var(--radius-sm);
       border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 6px 8px 5px 10px; /* LEFT = 10px */
+      padding: 6px 7px 5px;
       background: rgba(15, 23, 42, 0.96);
       font-size: 11px;
     }
@@ -822,11 +822,21 @@ sol@node:~$ cat contract.cfg
     let currentSpeed = 26; // ms between chars (baseline)
     let lastScrollY = window.scrollY;
 
+    // helper to remove leading whitespace text nodes so prompts are truly hard-left
+    function stripLeadingWhitespaceNodes(el) {
+      while (
+        el.firstChild &&
+        el.firstChild.nodeType === Node.TEXT_NODE &&
+        /^\s*$/.test(el.firstChild.textContent)
+      ) {
+        el.removeChild(el.firstChild);
+      }
+    }
+
     window.addEventListener("scroll", () => {
       const y = window.scrollY;
       const dy = Math.abs(y - lastScrollY);
       lastScrollY = y;
-      // Map scroll delta to speed (faster scroll => smaller delay)
       const fast = 14;
       const slow = 55;
       const factor = Math.max(0, Math.min(dy / 80, 1)); // 0..1
@@ -838,6 +848,9 @@ sol@node:~$ cat contract.cfg
       let full, promptSpan, cmdSpan, promptLen, target;
 
       if (isCmd) {
+        // strip any whitespace text nodes before the prompt so it's truly left-aligned
+        stripLeadingWhitespaceNodes(line);
+
         promptSpan = line.querySelector(".prompt");
         cmdSpan = line.querySelector(".cmd");
         const promptText = promptSpan ? promptSpan.textContent : "";
@@ -959,7 +972,7 @@ sol@node:~$ cat contract.cfg
   // INTERACTIVE CLI
   (function () {
     const cliEcho = document.getElementById("cli-echo");
-       const cliOutput = document.getElementById("cli-output");
+    const cliOutput = document.getElementById("cli-output");
     const cliLine = document.getElementById("cli-line");
 
     function setOutput(text) {
