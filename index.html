@@ -190,7 +190,7 @@
     }
 
     .terminal-body {
-      padding: 10px 6px 12px 6px; /* small, consistent gutter */
+      padding: 10px 6px 12px 6px;
       font-size: 12px;
       line-height: 1.5;
       text-align: left;
@@ -231,7 +231,7 @@
       margin-bottom: 4px;
     }
 
-    /* terminal-style "lists" – no HTML bullets, just > text lines */
+    /* terminal-style list; no browser bullets */
     .list {
       margin: 0;
       padding-left: 0;
@@ -241,7 +241,6 @@
 
     .list li {
       margin-bottom: 2px;
-      padding-left: 0;
       position: relative;
       white-space: pre-wrap;
     }
@@ -275,6 +274,7 @@
       border: 1px dashed rgba(75, 85, 99, 0.9);
       margin-top: 6px;
       color: var(--text-soft);
+      white-space: pre-wrap;
     }
 
     .token-code span.key {
@@ -478,6 +478,7 @@
       outline: none;
       min-width: 3px;
       display: inline-block;
+      caret-color: transparent; /* hide native caret */
     }
   </style>
 </head>
@@ -529,7 +530,7 @@
 
       <!-- SYS STATUS -->
       <div class="section-block">
-        <div class="line animate-line">
+        <div class="line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">cat /sys/status</span>
         </div>
         <div class="line output animate-line">
@@ -548,7 +549,7 @@
 &gt; contract      = contract_not_initiated
         </div>
 
-        <div class="line animate-line" style="margin-top:8px;">
+        <div class="line animate-line type-cmd" style="margin-top:8px;">
           <span class="prompt">sol@node:~$ </span><span class="cmd">sys.ping 404cat</span>
         </div>
         <div class="line output animate-line">
@@ -564,7 +565,7 @@
 &gt; latency  = 32ms
         </div>
 
-        <div class="line animate-line" style="margin-top:4px;">
+        <div class="line animate-line type-cmd" style="margin-top:4px;">
           <span class="prompt">sol@node:~$ </span><span class="cmd">echo "404: cat_not_found, operator located"</span>
         </div>
         <div class="line output-soft animate-line">
@@ -574,7 +575,7 @@
 
       <!-- ABOUT -->
       <div class="section-block" id="about">
-        <div class="section-title-line line animate-line">
+        <div class="section-title-line line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">cat /about</span>
         </div>
         <div class="two-col">
@@ -611,7 +612,7 @@
 
       <!-- TOKEN PLAN -->
       <div class="section-block" id="token">
-        <div class="section-title-line line animate-line">
+        <div class="section-title-line line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">cat /token_plan</span>
         </div>
 
@@ -626,9 +627,9 @@
               <li class="animate-line">no talk of raises or venture slices, focus stays on flow</li>
             </ul>
             <div class="token-code animate-line">
-              <div><span class="key">sol@node:~$</span> cat contract.cfg</div>
-              <div>&gt; contract_address = <span class="value">"contract_not_initiated"</span></div>
-              <div>&gt; launch_mode      = <span class="value">"arming_sequence"</span></div>
+sol@node:~$ cat contract.cfg
+> contract_address = "contract_not_initiated"
+> launch_mode      = "arming_sequence"
             </div>
             <div class="line output-soft animate-line" style="margin-top:6px;">
 &gt; after deployment this block updates with the real address and a short "how not to get tricked" checklist
@@ -650,7 +651,7 @@
 
       <!-- UTILITY STACK -->
       <div class="section-block" id="utility">
-        <div class="section-title-line line animate-line">
+        <div class="section-title-line line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">cat /utility_stack</span>
         </div>
 
@@ -685,7 +686,7 @@
 
       <!-- ROADMAP -->
       <div class="section-block" id="roadmap">
-        <div class="section-title-line line animate-line">
+        <div class="section-title-line line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">cat /roadmap</span>
         </div>
 
@@ -717,7 +718,7 @@
 
       <!-- LOGS -->
       <div class="section-block" id="logs">
-        <div class="section-title-line line animate-line">
+        <div class="section-title-line line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">tail -n 3 /var/log/404cat.log</span>
         </div>
 
@@ -751,7 +752,7 @@
 
       <!-- FAQ -->
       <div class="section-block" id="faq">
-        <div class="section-title-line line animate-line">
+        <div class="section-title-line line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">cat /faq</span>
         </div>
 
@@ -787,12 +788,11 @@
 
       <!-- OUTRO -->
       <div class="section-block">
-        <div class="line animate-line">
+        <div class="line animate-line type-cmd">
           <span class="prompt">sol@node:~$ </span><span class="cmd">echo "stay synced. real address and utilities announced live."</span>
         </div>
-        <!-- static prompt only, no extra blinking cursor -->
         <div class="line">
-          <span class="prompt">sol@node:~$ </span>
+          <span class="prompt">sol@node:~$ </span><span class="cursor"></span>
         </div>
       </div>
     </div>
@@ -814,30 +814,60 @@
   // footer year
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // TYPEWRITER
+  // TYPEWRITER WITH SCROLL-SPEED INFLUENCE
   (function () {
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!lines.length) return;
 
-    const items = lines.map((line) => {
-      let target = line.querySelector(".cmd");
-      let full;
+    let currentSpeed = 26; // ms between chars (baseline)
+    let lastScrollY = window.scrollY;
 
-      if (target) {
-        full = target.textContent.replace(/^\s+/, "");
-        target.textContent = "";
+    window.addEventListener("scroll", () => {
+      const y = window.scrollY;
+      const dy = Math.abs(y - lastScrollY);
+      lastScrollY = y;
+      // Map scroll delta to speed (faster scroll => smaller delay)
+      const fast = 14;
+      const slow = 55;
+      const factor = Math.max(0, Math.min(dy / 80, 1)); // 0..1
+      currentSpeed = slow - (slow - fast) * factor;
+    });
+
+    const items = lines.map((line) => {
+      const isCmd = line.classList.contains("type-cmd");
+      let full, promptSpan, cmdSpan, promptLen, target;
+
+      if (isCmd) {
+        promptSpan = line.querySelector(".prompt");
+        cmdSpan = line.querySelector(".cmd");
+        const promptText = promptSpan ? promptSpan.textContent : "";
+        const cmdText = cmdSpan ? cmdSpan.textContent : "";
+        full = (promptText + cmdText).replace(/^\s+/, "");
+        promptLen = promptText.length;
+        if (promptSpan) promptSpan.textContent = "";
+        if (cmdSpan) cmdSpan.textContent = "";
       } else {
-        const raw = line.textContent;
-        full = raw.replace(/^\s+/, "");
-        line.textContent = "";
-        target = document.createElement("span");
-        target.className = "type-text";
-        target.textContent = "";
-        line.appendChild(target);
+        target = line.querySelector(".cmd");
+        if (target) {
+          full = target.textContent.replace(/^\s+/, "");
+          target.textContent = "";
+        } else {
+          const raw = line.textContent;
+          full = raw.replace(/^\s+/, "");
+          line.textContent = "";
+          target = document.createElement("span");
+          target.className = "type-text";
+          target.textContent = "";
+          line.appendChild(target);
+        }
       }
 
       return {
         line,
+        isCmd,
+        promptSpan,
+        cmdSpan,
+        promptLen,
         target,
         fullText: full,
         index: 0,
@@ -854,25 +884,33 @@
       active = item;
       item.typing = true;
       item.index = 0;
-      item.target.textContent = "";
-
-      const speed = 22;
 
       const step = () => {
         if (!item.typing) return;
         item.index++;
-        item.target.textContent = item.fullText.slice(0, item.index);
+        const slice = item.fullText.slice(0, item.index);
+
+        if (item.isCmd) {
+          const promptLen = item.promptLen || 0;
+          const promptText = slice.slice(0, promptLen);
+          const cmdText = slice.slice(promptLen);
+          if (item.promptSpan) item.promptSpan.textContent = promptText;
+          if (item.cmdSpan) item.cmdSpan.textContent = cmdText;
+        } else if (item.target) {
+          item.target.textContent = slice;
+        }
+
         if (item.index >= item.fullText.length) {
           item.typing = false;
           item.done = true;
           active = null;
           scheduleNext();
         } else {
-          setTimeout(step, speed);
+          setTimeout(step, currentSpeed);
         }
       };
 
-      setTimeout(step, speed);
+      setTimeout(step, currentSpeed);
     }
 
     function scheduleNext() {
@@ -890,6 +928,7 @@
     if (!("IntersectionObserver" in window)) {
       items.forEach((it) => {
         it.visible = true;
+        it.line.classList.add("visible");
       });
       scheduleNext();
       return;
