@@ -514,18 +514,14 @@
 
     <div class="terminal-body">
       <!-- LIVE CLI -->
-      <div class="line output-soft">
-&gt; cli_hint = type <span class="ansi-cyan">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern)
-      </div>
-      <div class="line" id="cli-line">
-        <span class="prompt">sol@node:~$ </span><span
+      <div class="line output-soft">&gt; cli_hint = type <span class="ansi-cyan">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern)</div>
+      <div class="line" id="cli-line"><span class="prompt">sol@node:~$ </span><span
           id="cli-echo"
           contenteditable="true"
           autocorrect="off"
           autocapitalize="none"
           spellcheck="false"
-        ></span><span class="cursor"></span>
-      </div>
+        ></span><span class="cursor"></span></div>
       <div class="line output-soft" id="cli-output"></div>
 
       <!-- SYS STATUS -->
@@ -819,7 +815,7 @@ sol@node:~$ cat contract.cfg
     const lines = Array.from(document.querySelectorAll(".animate-line"));
     if (!lines.length) return;
 
-    let currentSpeed = 26; // ms between chars (baseline)
+    let currentSpeed = 26; // baseline; will be re-mapped on scroll
     let lastScrollY = window.scrollY;
 
     // helper to remove leading whitespace text nodes so prompts are truly hard-left
@@ -837,9 +833,11 @@ sol@node:~$ cat contract.cfg
       const y = window.scrollY;
       const dy = Math.abs(y - lastScrollY);
       lastScrollY = y;
-      const fast = 14;
-      const slow = 55;
-      const factor = Math.max(0, Math.min(dy / 80, 1)); // 0..1
+
+      // stronger scroll influence: small scrolls already noticeably speed it up
+      const fast = 8;   // ms per char when scrolling fast
+      const slow = 80;  // ms per char when barely scrolling
+      const factor = Math.max(0, Math.min(dy / 40, 1)); // 0..1
       currentSpeed = slow - (slow - fast) * factor;
     });
 
@@ -994,7 +992,7 @@ sol@node:~$ cat contract.cfg
 
       if (cmd === "help" || cmd === "?") {
         setOutput(
-          "available: help, links, about, token, utility, roadmap, faq, logs, clear, theme vintage, theme modern"
+          "available: help, links, about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern"
         );
         return;
       }
