@@ -2,410 +2,373 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>404CAT – solana-native terminal cat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="404CAT is a Solana-native meme and terminal-flavored tool stack for devs and degens. Token first, utilities online shortly after."
-  />
+  <title>404CAT — solana-native terminal cat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
       --bg: #020617;
-      --bg-alt: #030712;
-      --accent: #7c3aed;
-      --accent-2: #22c55e;
+      --bg-terminal: #020617;
+      --bg-window: #020617;
+      --border-window: #111827;
       --text: #e5e7eb;
-      --text-soft: #9ca3af;
-      --border: #1f2937;
-      --error: #f97316;
-      --radius-lg: 10px;
-      --radius-sm: 8px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.75);
-      --terminal-font: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans-font: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      --text-dim: #9ca3af;
+      --accent: #22c55e;
+      --accent-2: #38bdf8;
+      --warn: #facc15;
+      --error: #f97373;
+      --tag-bg: rgba(15, 23, 42, 0.96);
+      --tag-border: rgba(31, 41, 55, 1);
+      --radius: 8px;
+      --radius-sm: 6px;
     }
 
     * {
       box-sizing: border-box;
-    }
-
-    html,
-    body {
       margin: 0;
       padding: 0;
-      scroll-behavior: smooth;
-      background: radial-gradient(circle at top, #020617 0, #000000 55%);
-      color: var(--text);
-      font-family: var(--terminal-font);
+    }
+
+    html, body {
+      height: 100%;
     }
 
     body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: radial-gradient(circle at top, #020617 0, #020617 35%, #020617 100%);
+      color: var(--text);
+      font-family: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+      -webkit-font-smoothing: antialiased;
+      padding: 12px 6px 24px;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    header {
-      background: #020617;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
-    }
-
-    .shell-bar {
-      max-width: 1100px;
+    .shell {
+      max-width: 960px;
       margin: 0 auto;
-      padding: 8px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
     }
 
-    .brand {
+    .top-bar {
       display: flex;
       align-items: center;
       gap: 10px;
+      margin-bottom: 10px;
+      padding: 0 4px;
     }
 
-    .brand-mark {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
-      background: #020617;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .top-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
-    .brand-logo {
+    .top-icon img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      display: block;
     }
 
-    .brand-text {
+    .top-title {
       display: flex;
       flex-direction: column;
-      line-height: 1.1;
+      line-height: 1.2;
     }
 
-    .brand-text span:first-child {
+    .top-title-main {
       font-size: 14px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
-    .brand-text span:last-child {
+    .top-title-sub {
       font-size: 11px;
-      color: var(--text-soft);
+      color: var(--text-dim);
     }
 
-    .shell-status {
-      font-size: 11px;
-      color: var(--text-soft);
-      display: none;
-    }
-
-    .shell-status span.dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--accent-2);
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.95);
-      display: inline-block;
-      margin-right: 6px;
-    }
-
-    @media (min-width: 720px) {
-      .shell-status {
-        display: inline-flex;
-        align-items: center;
-      }
-    }
-
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 12px 4px 48px;
-      flex: 1;
-    }
-
-    .terminal-shell {
-      position: relative;
-      border-radius: 10px;
-      border: 1px solid rgba(31, 41, 55, 0.95);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.98));
-      box-shadow: var(--shadow-soft);
+    .terminal-window {
+      border-radius: var(--radius);
+      border: 1px solid var(--border-window);
+      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
       overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.85),
+        0 18px 45px rgba(0, 0, 0, 0.8);
     }
 
     .terminal-header {
+      height: 26px;
+      border-bottom: 1px solid rgba(15, 23, 42, 1);
+      background: linear-gradient(to bottom, #020617, #020617);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 6px 6px;
-      background: #020617;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 0 8px;
       font-size: 11px;
+      color: var(--text-dim);
     }
 
-    .terminal-dots {
+    .header-dots {
       display: flex;
       gap: 6px;
-      align-items: center;
+      margin-right: 10px;
     }
 
-    .terminal-dot {
-      width: 9px;
-      height: 9px;
+    .dot {
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: #4b5563;
     }
 
-    .terminal-dot.red {
-      background: #ef4444;
-    }
+    .dot.red { background: #f97373; }
+    .dot.yellow { background: #facc15; }
+    .dot.green { background: #22c55e; }
 
-    .terminal-dot.yellow {
-      background: #eab308;
-    }
-
-    .terminal-dot.green {
-      background: #22c55e;
-    }
-
-    .terminal-title {
-      color: var(--text-soft);
+    .header-title {
+      opacity: 0.85;
     }
 
     .terminal-body {
-      padding: 10px 6px 12px 6px;
+      background: var(--bg-terminal);
+      padding: 10px 10px 12px 10px; /* hard-left padding */
       font-size: 12px;
       line-height: 1.5;
       text-align: left;
     }
 
-    .prompt {
-      color: #22c55e;
-    }
-
-    .line {
-      margin-bottom: 3px;
+    .term-line {
       white-space: pre-wrap;
+      word-break: break-word;
+      font-variant-ligatures: none;
     }
 
-    .line:last-child {
-      margin-bottom: 0;
+    .prompt-line,
+    .cli-line {
+      color: var(--accent);
     }
 
-    .cmd {
-      color: #e5e7eb;
+    .prompt-label {
+      color: var(--accent);
     }
 
-    .output {
-      color: #d1d5db;
+    .prompt-command {
+      color: var(--text);
     }
 
-    .output-soft {
-      color: var(--text-soft);
+    .output-line {
+      color: var(--text);
+    }
+
+    .output-label {
+      color: var(--text-dim);
+    }
+
+    .output-value-ok {
+      color: var(--accent);
+    }
+
+    .output-value-warn {
+      color: var(--warn);
+    }
+
+    .output-value-error {
+      color: var(--error);
+    }
+
+    .hint-line {
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .hint-line .cmd {
+      color: var(--accent-2);
+    }
+
+    .section-divider {
+      border-top: 1px solid rgba(15, 23, 42, 1);
+      margin: 10px 0 8px;
     }
 
     .section-block {
-      margin-top: 12px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(31, 41, 55, 0.7);
+      margin-bottom: 10px;
     }
 
-    .section-title-line {
-      margin-bottom: 4px;
-    }
-
-    /* terminal-style list; no browser bullets */
-    .list {
-      margin: 0;
+    /* Hard-left alignment for all section command lines */
+    .section-command-line {
+      margin-left: 0;
       padding-left: 0;
-      list-style: none;
-      color: var(--text-soft);
-    }
-
-    .list li {
-      margin-bottom: 2px;
-      position: relative;
-      white-space: pre-wrap;
-    }
-
-    .list li::before {
-      content: "> ";
-      color: var(--text-soft);
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 4px;
-    }
-
-    .pill {
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.96);
-      color: var(--text-soft);
-    }
-
-    .token-code {
-      font-size: 11px;
-      padding: 6px 8px;
-      border-radius: 6px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px dashed rgba(75, 85, 99, 0.9);
-      margin-top: 6px;
-      color: var(--text-soft);
-      white-space: pre-wrap;
-    }
-
-    .token-code span.key {
-      color: #e5e7eb;
-    }
-
-    .token-code span.value {
-      color: #fb923c;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.3fr);
-      gap: 14px;
-    }
-
-    @media (max-width: 840px) {
-      .two-col {
-        grid-template-columns: minmax(0, 1fr);
-      }
     }
 
     .box {
       border-radius: var(--radius-sm);
       border: 1px solid rgba(31, 41, 55, 0.95);
       background: rgba(15, 23, 42, 0.96);
-      padding: 8px 8px 6px;
+      padding: 6px 10px 4px 10px; /* align to same left as terminal-body */
+      margin-top: 4px;
+    }
+
+    .box-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .kv-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .kv-label {
+      width: 115px;
+      color: var(--text-dim);
+    }
+
+    .kv-value {
+      flex: 1;
+    }
+
+    .list-block {
+      margin-top: 4px;
+    }
+
+    .list-line {
+      white-space: pre-wrap;
+    }
+
+    .list-line::before {
+      content: "- ";
+      color: var(--text-dim);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      border: 1px solid var(--tag-border);
+      padding: 1px 7px 1px;
+      font-size: 10px;
+      color: var(--text-dim);
+      background: var(--tag-bg);
     }
 
     .logs {
       margin-top: 6px;
       border-radius: var(--radius-sm);
       border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 6px 8px;
+      padding: 4px 10px 4px 10px; /* align left */
+      font-size: 11px;
     }
 
-    .log-entry {
-      border-bottom: 1px dashed rgba(55, 65, 81, 0.8);
-      padding: 3px 0;
-    }
-
-    .log-entry:last-child {
-      border-bottom: none;
+    .log-row {
+      margin-bottom: 4px;
     }
 
     .log-meta {
-      color: var(--text-soft);
-      font-size: 11px;
+      color: var(--text-dim);
     }
 
-    .log-body {
-      font-size: 11px;
+    .log-tag {
+      color: var(--accent);
     }
 
-    .faq-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 8px;
+    .log-level-ok {
+      color: var(--accent);
+    }
+
+    .log-level-waiting {
+      color: var(--warn);
+    }
+
+    .log-msg {
+      margin-left: 2px;
+    }
+
+    .faq {
       margin-top: 4px;
-    }
-
-    @media (max-width: 840px) {
-      .faq-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
     }
 
     .faq-item {
       border-radius: var(--radius-sm);
       border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 6px 7px 5px;
+      padding: 4px 10px 4px 10px; /* align left */
       background: rgba(15, 23, 42, 0.96);
       font-size: 11px;
+      margin-bottom: 5px;
     }
 
     .faq-q {
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 2px;
-      color: #e5e7eb;
+      color: var(--text);
     }
 
     .faq-a {
-      color: var(--text-soft);
-      white-space: pre-wrap;
+      color: var(--text-dim);
     }
 
-    footer {
-      padding: 10px 12px 18px;
-      border-top: 1px solid rgba(31, 41, 55, 0.9);
-      background: #020617;
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
+    .footer {
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--text-dim);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 8px;
-      align-items: center;
+      gap: 6px;
+      padding: 0 2px;
     }
 
     .footer-links {
       display: flex;
+      gap: 6px;
       flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
     }
 
-    .footer-links a {
-      padding: 2px 6px;
+    .footer-btn {
       border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 1);
+      padding: 2px 8px;
+      font-size: 10px;
+      background: rgba(15, 23, 42, 1);
+      color: var(--text-dim);
+      text-decoration: none;
     }
 
-    .ansi-green { color: #22c55e; }
-    .ansi-yellow { color: #eab308; }
-    .ansi-red { color: #ef4444; }
-    .ansi-cyan { color: #22d3ee; }
-    .ansi-magenta { color: #e879f9; }
+    .footer-btn:hover {
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+    }
+
+    /* Live CLI */
+    .live-cli {
+      margin: 6px 0 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .live-prompt {
+      color: var(--accent);
+    }
+
+    .live-input {
+      flex: 1;
+      min-height: 1em;
+      outline: none;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      caret-color: transparent; /* we draw our own block cursor */
+    }
 
     .cursor {
       display: inline-block;
       width: 7px;
-      height: 1em;
-      background: #e5e7eb;
-      margin-left: 2px;
-      animation: blink 1s steps(2, start) infinite;
+      height: 1.1em;
+      background: var(--accent);
+      margin-left: 1px;
+      animation: blink 1s steps(1, start) infinite;
       vertical-align: bottom;
     }
 
@@ -414,657 +377,430 @@
       50.01%, 100% { opacity: 0; }
     }
 
-    .animate-line {
-      opacity: 0;
-      white-space: pre-wrap;
+    /* Typewriter */
+    .typed-line {
+      opacity: 0.1;
     }
 
-    .animate-line.visible {
+    .typed-line.typed-complete {
       opacity: 1;
-      transition: opacity 0.2s ease-out;
     }
 
-    .type-text {
-      white-space: pre-wrap;
-    }
+    @media (max-width: 640px) {
+      body {
+        padding: 8px 4px 18px;
+      }
 
-    body.theme-vintage {
-      --bg: #020b03;
-      --bg-alt: #020805;
-      --accent-2: #4ade80;
-      --text: #bbf7d0;
-      --text-soft: #6ee7b7;
-      --border: #064e3b;
-    }
+      .terminal-window {
+        font-size: 11px;
+      }
 
-    body.theme-vintage .terminal-shell {
-      background: radial-gradient(circle at top left, #001b10, #000000);
-      box-shadow: 0 0 40px rgba(16, 185, 129, 0.45);
-      filter: contrast(1.08) saturate(0.9);
-    }
-
-    body.theme-vintage .terminal-shell::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image: linear-gradient(
-        to bottom,
-        rgba(15, 118, 110, 0.18) 1px,
-        transparent 1px
-      );
-      background-size: 100% 2px;
-      mix-blend-mode: soft-light;
-      opacity: 0.85;
-    }
-
-    body.theme-vintage .terminal-shell::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at top, rgba(190, 242, 100, 0.22), transparent 55%);
-    }
-
-    body.theme-vintage .prompt {
-      color: #86efac;
-    }
-
-    body.theme-vintage .cursor {
-      background: #bbf7d0;
-    }
-
-    #cli-echo {
-      outline: none;
-      min-width: 3px;
-      display: inline-block;
-      caret-color: transparent; /* hide native caret */
+      .kv-label {
+        width: 98px;
+      }
     }
   </style>
 </head>
 <body>
-<header>
-  <div class="shell-bar">
-    <div class="brand">
-      <div class="brand-mark">
-        <img src="404cat-logo.png" alt="404CAT logo" class="brand-logo" />
+  <div class="shell">
+    <div class="top-bar">
+      <div class="top-icon">
+        <!-- Use your transparent 404CAT logo here -->
+        <img src="404cat-logo.png" alt="404CAT" />
       </div>
-      <div class="brand-text">
-        <span>404CAT</span>
-        <span>solana-native terminal cat</span>
+      <div class="top-title">
+        <div class="top-title-main">404CAT</div>
+        <div class="top-title-sub">solana-native terminal cat</div>
       </div>
     </div>
-    <div class="shell-status">
-      <span class="dot"></span>
-      session = prelaunch; contract = contract_not_initiated
+
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="header-dots">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div}
+          ><div class="dot green"></div>
+        </div>
+        <div class="header-title">sol@node:~$ 404cat.meme</div>
+      </div>
+
+      <div class="terminal-body">
+        <!-- hint -->
+        <div class="term-line hint-line">
+          &gt; cli_hint = type <span class="cmd">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear)
+        </div>
+
+        <!-- live CLI, aligned hard-left -->
+        <div class="live-cli">
+          <span class="live-prompt">sol@node:~$</span>
+          <div class="live-input" id="liveInput" contenteditable="true" spellcheck="false"></div>
+          <span class="cursor" id="liveCursor"></span>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- /sys/status -->
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="1">
+sol@node:~$ cat /sys/status</div>
+
+          <div class="box">
+            <div class="kv-row">
+              <div class="kv-label">&gt; build_id</div>
+              <div class="kv-value">= v0.0.1-pre</div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">&gt; chain</div>
+              <div class="kv-value">= solana</div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">&gt; uptime</div>
+              <div class="kv-value">= 00h 08m 12s</div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">&gt; launch_window</div>
+              <div class="kv-value"><span class="output-value-warn">= scanning</span></div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">&gt; contract</div>
+              <div class="kv-value"><span class="output-value-error">= contract_not_initiated</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- sys.ping -->
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="2">
+sol@node:~$ sys.ping 404cat</div>
+
+          <div class="box">
+            <div class="kv-row">
+              <div class="kv-label">&gt; signal</div>
+              <div class="kv-value"><span class="output-value-ok">= online</span></div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">&gt; mode</div>
+              <div class="kv-value">= token_first</div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">&gt; utility</div>
+              <div class="kv-value">= staged_for_reveal</div>
+            </div>
+            <div class="kv-row">
+              <div class="kv-label">&gt; latency</div>
+              <div class="kv-value">= 32ms</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- echo intro -->
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="3">
+sol@node:~$ echo "404: cat_not_found, operator located"</div>
+
+          <div class="box">
+            <div class="term-line list-line">
+              404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
+            </div>
+          </div>
+        </div>
+
+        <!-- about -->
+        <div class="section-divider"></div>
+
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="4">
+sol@node:~$ cat /about</div>
+
+          <div class="box">
+            <div class="box-title">&gt; description:</div>
+            <div class="list-block">
+              <div class="list-line">terminal flavored branding and voice, not corporate decks</div>
+              <div class="list-line">token as the identity layer, utilities wired in after launch</div>
+              <div class="list-line">no fake roadshow, just things that get shipped and used</div>
+            </div>
+            <div class="tag-row">
+              <div class="tag">chain = solana</div>
+              <div class="tag">mode = token_first</div>
+              <div class="tag">voice = terminal_native</div>
+            </div>
+          </div>
+
+          <div class="box" style="margin-top:6px;">
+            <div class="box-title">&gt; built_for:</div>
+            <div class="list-block">
+              <div class="list-line">devs who live inside terminals and logs</div>
+              <div class="list-line">degenerates who want simple tools around launches and wallets</div>
+              <div class="list-line">operators who like memes that arrive with utilities attached</div>
+            </div>
+            <div class="list-block" style="margin-top:4px;">
+              <div class="list-line">&gt; requirement = enjoy the chaos; respect the craft; read the output</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- token plan -->
+        <div class="section-divider"></div>
+
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="5">
+sol@node:~$ cat /token_plan</div>
+
+          <div class="box">
+            <div class="box-title">&gt; status = prelaunch</div>
+            <div class="list-block">
+              <div class="list-line">contract not yet deployed, no fake copies are real</div>
+              <div class="list-line">token comes online first, then utilities link into it</div>
+              <div class="list-line">no talk of raises or venture slices, focus stays on flow</div>
+            </div>
+          </div>
+
+          <div class="box" style="margin-top:6px;">
+            <div class="box-title">sol@node:~$ cat contract.cfg</div>
+            <div class="list-block">
+              <div class="list-line">&gt; contract_address = "contract_not_initiated"</div>
+              <div class="list-line">&gt; launch_mode      = "arming_sequence"</div>
+            </div>
+            <div class="list-block" style="margin-top:6px;">
+              <div class="list-line">&gt; after deployment this block updates with the real address and a short "how not to get tricked" checklist</div>
+            </div>
+          </div>
+
+          <div class="box" style="margin-top:6px;">
+            <div class="box-title">&gt; planned_flow:</div>
+            <div class="list-block">
+              <div class="list-line">phase 1: token launch and identity lock across site and socials</div>
+              <div class="list-line">phase 2: first utility revealed and opened to the community</div>
+              <div class="list-line">phase 3: deeper hooks and small perks for active holders</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- utility stack -->
+        <div class="section-divider"></div>
+
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="6">
+sol@node:~$ cat /utility_stack</div>
+
+          <div class="box">
+            <div class="box-title">&gt; policy:</div>
+            <div class="list-block">
+              <div class="list-line">no imaginary features; utilities exist as real builds</div>
+              <div class="list-line">focus on Solana launches and wallet behavior</div>
+              <div class="list-line">keep interfaces simple, terminal flavored, and fast to use</div>
+            </div>
+            <div class="list-block" style="margin-top:4px;">
+              <div class="list-line">&gt; note = first utility is already compiling in private and goes public shortly after the token comes online</div>
+            </div>
+          </div>
+
+          <div class="box" style="margin-top:6px;">
+            <div class="box-title">&gt; stack_outline:</div>
+            <div class="list-block">
+              <div class="list-line">tool_01: launch and wallet intel mvp (private until post-launch)</div>
+              <div class="list-line">tool_02: overlay style view for quick risk notes and context</div>
+              <div class="list-line">tool_03: low noise alert flow routed through Telegram</div>
+              <div class="list-line">tool_04: small dev toys and side experiments from late cycles</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- roadmap -->
+        <div class="section-divider"></div>
+
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="7">
+sol@node:~$ cat /roadmap</div>
+
+          <div class="box">
+            <div class="box-title">&gt; near_term:</div>
+            <div class="list-block">
+              <div class="list-line">finalize launch details and timing for the token</div>
+              <div class="list-line">deploy contract and update all public surfaces with the real address</div>
+              <div class="list-line">turn on the first utility endpoint for the community</div>
+              <div class="list-line">publish a short usage note so nobody has to guess how it works</div>
+            </div>
+          </div>
+
+          <div class="box" style="margin-top:6px;">
+            <div class="box-title">&gt; after_launch:</div>
+            <div class="list-block">
+              <div class="list-line">iterate on tools based on real feedback and data</div>
+              <div class="list-line">expand overlay and alert features in a controlled way</div>
+              <div class="list-line">keep everything terminal native, avoid overdesigned clutter</div>
+              <div class="list-line">if it stops feeling fun or authentic, refactor it</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- logs -->
+        <div class="section-divider"></div>
+
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="8">
+sol@node:~$ tail -n 3 /var/log/404cat.log</div>
+
+          <div class="logs">
+            <div class="log-row">
+              <span class="log-meta">[2025-11-30 03:42]</span>
+              <span class="log-tag"> tag=build</span>
+              <span class="log-level-ok"> level=ok</span>
+              <span class="log-msg">
+                &gt; compiled first utility mvp. kept link dark while token arm sequence starts.
+              </span>
+            </div>
+            <div class="log-row">
+              <span class="log-meta">[2025-11-30 10:15]</span>
+              <span class="log-tag"> tag=site</span>
+              <span class="log-level-ok"> level=ok</span>
+              <span class="log-msg">
+                &gt; promoted landing to full console style interface. mounted routes: about, token, utility, roadmap, faq.
+              </span>
+            </div>
+            <div class="log-row">
+              <span class="log-meta">[pending]</span>
+              <span class="log-tag"> tag=launch</span>
+              <span class="log-level-waiting"> level=waiting</span>
+              <span class="log-msg">
+                &gt; contract_not_initiated. network scanning for optimal launch window. follow X and Telegram for the real address.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- faq -->
+        <div class="section-divider"></div>
+
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="9">
+sol@node:~$ cat /faq</div>
+
+          <div class="faq">
+            <div class="faq-item">
+              <div class="faq-q">is the token live</div>
+              <div class="faq-a">
+                not yet. when it is live, the real contract address will be displayed here and on the 404CAT X profile.
+                if it is not in both places, it is not the real one.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">what about utilities</div>
+              <div class="faq-a">
+                utilities are already in progress. the first one opens shortly after launch and more arrive as they are
+                tested and hardened. no giant promises, just builds.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">why token first</div>
+              <div class="faq-a">
+                the token is the identity anchor. once it exists and is verified, utilities can plug into it cleanly and
+                the rest of the stack can grow without confusion.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">where do i stay updated</div>
+              <div class="faq-a">
+                main signal routes are X and Telegram:<br/>
+                - X: @404CATsolana<br/>
+                - TG: t.me/cat_not_found
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- closing echo -->
+        <div class="section-block">
+          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="10">
+sol@node:~$ echo "stay synced. real address and utilities announced live."</div>
+        </div>
+
+        <!-- pseudo bottom prompt -->
+        <div class="term-line prompt-line" style="margin-top:6px;">
+sol@node:~$</div>
+
+        <!-- footer -->
+        <div class="footer">
+          <div>© 2025 404CAT. contract_not_initiated. terminal cat for solana devs and degens.</div>
+          <div class="footer-links">
+            <a class="footer-btn" href="https://x.com/404CATsolana" target="_blank" rel="noopener">X / Twitter</a>
+            <a class="footer-btn" href="https://t.me/cat_not_found" target="_blank" rel="noopener">Telegram</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</header>
 
-<main class="page">
-  <div class="terminal-shell">
-    <div class="terminal-header">
-      <div class="terminal-dots">
-        <div class="terminal-dot red"></div>
-        <div class="terminal-dot yellow"></div>
-        <div class="terminal-dot green"></div>
-      </div>
-      <div class="terminal-title">sol@node:~$ 404cat.meme</div>
-    </div>
+  <script>
+    // single block cursor focus handling (no double cursors)
+    const liveInput = document.getElementById('liveInput');
+    const liveCursor = document.getElementById('liveCursor');
 
-    <div class="terminal-body">
-      <!-- LIVE CLI -->
-      <div class="line output-soft">
-&gt; cli_hint = type <span class="ansi-cyan">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear, theme vintage, theme modern)
-      </div>
-      <div class="line" id="cli-line">
-        <span class="prompt">sol@node:~$ </span><span
-          id="cli-echo"
-          contenteditable="true"
-          autocorrect="off"
-          autocapitalize="none"
-          spellcheck="false"
-        ></span><span class="cursor"></span>
-      </div>
-      <div class="line output-soft" id="cli-output"></div>
-
-      <!-- SYS STATUS -->
-      <div class="section-block">
-        <div class="line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /sys/status</span>
-        </div>
-        <div class="line output animate-line">
-&gt; build_id      = v0.0.1-pre
-        </div>
-        <div class="line output animate-line">
-&gt; chain         = solana
-        </div>
-        <div class="line output animate-line">
-&gt; uptime        = 00h 08m 12s
-        </div>
-        <div class="line output animate-line">
-&gt; launch_window = scanning
-        </div>
-        <div class="line output animate-line">
-&gt; contract      = contract_not_initiated
-        </div>
-
-        <div class="line animate-line type-cmd" style="margin-top:8px;">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">sys.ping 404cat</span>
-        </div>
-        <div class="line output animate-line">
-&gt; signal   = online
-        </div>
-        <div class="line output animate-line">
-&gt; mode     = token_first
-        </div>
-        <div class="line output animate-line">
-&gt; utility  = staged_for_reveal
-        </div>
-        <div class="line output animate-line">
-&gt; latency  = 32ms
-        </div>
-
-        <div class="line animate-line type-cmd" style="margin-top:4px;">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">echo "404: cat_not_found, operator located"</span>
-        </div>
-        <div class="line output-soft animate-line">
-&gt; 404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
-        </div>
-      </div>
-
-      <!-- ABOUT -->
-      <div class="section-block" id="about">
-        <div class="section-title-line line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /about</span>
-        </div>
-        <div class="two-col">
-          <div>
-            <div class="line output-soft animate-line">
-&gt; description:
-            </div>
-            <ul class="list">
-              <li class="animate-line">terminal flavored branding and voice, not corporate decks</li>
-              <li class="animate-line">token as the identity layer, utilities wired in after launch</li>
-              <li class="animate-line">no fake roadshow, just things that get shipped and used</li>
-            </ul>
-            <div class="pill-row">
-              <span class="pill animate-line">chain = solana</span>
-              <span class="pill animate-line">mode = token_first</span>
-              <span class="pill animate-line">voice = terminal_native</span>
-            </div>
-          </div>
-          <div class="box">
-            <div class="line output-soft animate-line">
-&gt; built_for:
-            </div>
-            <ul class="list">
-              <li class="animate-line">devs who live inside terminals and logs</li>
-              <li class="animate-line">degenerates who want simple tools around launches and wallets</li>
-              <li class="animate-line">operators who like memes that arrive with utilities attached</li>
-            </ul>
-            <div class="line output-soft animate-line" style="margin-top:4px;">
-&gt; requirement = enjoy the chaos; respect the craft; read the output
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TOKEN PLAN -->
-      <div class="section-block" id="token">
-        <div class="section-title-line line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /token_plan</span>
-        </div>
-
-        <div class="two-col">
-          <div>
-            <div class="line output-soft animate-line">
-&gt; status = prelaunch
-            </div>
-            <ul class="list">
-              <li class="animate-line">contract not yet deployed, no fake copies are real</li>
-              <li class="animate-line">token comes online first, then utilities link into it</li>
-              <li class="animate-line">no talk of raises or venture slices, focus stays on flow</li>
-            </ul>
-            <div class="token-code animate-line">
-sol@node:~$ cat contract.cfg
-> contract_address = "contract_not_initiated"
-> launch_mode      = "arming_sequence"
-            </div>
-            <div class="line output-soft animate-line" style="margin-top:6px;">
-&gt; after deployment this block updates with the real address and a short "how not to get tricked" checklist
-            </div>
-          </div>
-
-          <div class="box">
-            <div class="line output-soft animate-line">
-&gt; planned_flow:
-            </div>
-            <ul class="list">
-              <li class="animate-line">phase 1: token launch and identity lock across site and socials</li>
-              <li class="animate-line">phase 2: first utility revealed and opened to the community</li>
-              <li class="animate-line">phase 3: deeper hooks and small perks for active holders</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- UTILITY STACK -->
-      <div class="section-block" id="utility">
-        <div class="section-title-line line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /utility_stack</span>
-        </div>
-
-        <div class="two-col">
-          <div>
-            <div class="line output-soft animate-line">
-&gt; policy:
-            </div>
-            <ul class="list">
-              <li class="animate-line">no imaginary features; utilities exist as real builds</li>
-              <li class="animate-line">focus on Solana launches and wallet behavior</li>
-              <li class="animate-line">keep interfaces simple, terminal flavored, and fast to use</li>
-            </ul>
-            <div class="line output-soft animate-line" style="margin-top:4px;">
-&gt; note = first utility is already compiling in private and goes public shortly after the token comes online
-            </div>
-          </div>
-
-          <div class="box">
-            <div class="line output-soft animate-line">
-&gt; stack_outline:
-            </div>
-            <ul class="list">
-              <li class="animate-line">tool_01: launch and wallet intel mvp (private until post-launch)</li>
-              <li class="animate-line">tool_02: overlay style view for quick risk notes and context</li>
-              <li class="animate-line">tool_03: low noise alert flow routed through Telegram</li>
-              <li class="animate-line">tool_04: small dev toys and side experiments from late cycles</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- ROADMAP -->
-      <div class="section-block" id="roadmap">
-        <div class="section-title-line line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /roadmap</span>
-        </div>
-
-        <div class="two-col">
-          <div class="box">
-            <div class="line output-soft animate-line">
-&gt; near_term:
-            </div>
-            <ul class="list">
-              <li class="animate-line">finalize launch details and timing for the token</li>
-              <li class="animate-line">deploy contract and update all public surfaces with the real address</li>
-              <li class="animate-line">turn on the first utility endpoint for the community</li>
-              <li class="animate-line">publish a short usage note so nobody has to guess how it works</li>
-            </ul>
-          </div>
-          <div class="box">
-            <div class="line output-soft animate-line">
-&gt; after_launch:
-            </div>
-            <ul class="list">
-              <li class="animate-line">iterate on tools based on real feedback and data</li>
-              <li class="animate-line">expand overlay and alert features in a controlled way</li>
-              <li class="animate-line">keep everything terminal native, avoid overdesigned clutter</li>
-              <li class="animate-line">if it stops feeling fun or authentic, refactor it</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- LOGS -->
-      <div class="section-block" id="logs">
-        <div class="section-title-line line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">tail -n 3 /var/log/404cat.log</span>
-        </div>
-
-        <div class="logs">
-          <div class="log-entry">
-            <div class="log-meta animate-line">
-[2025-11-30 03:42] tag=<span class="ansi-magenta">build</span> level=<span class="ansi-green">ok</span>
-            </div>
-            <div class="log-body line animate-line">
-&gt; compiled first utility mvp. kept link dark while token arm sequence starts.
-            </div>
-          </div>
-          <div class="log-entry">
-            <div class="log-meta animate-line">
-[2025-11-30 10:15] tag=<span class="ansi-cyan">site</span> level=<span class="ansi-green">ok</span>
-            </div>
-            <div class="log-body line animate-line">
-&gt; promoted landing to full console style interface. mounted routes: about, token, utility, roadmap, faq.
-            </div>
-          </div>
-          <div class="log-entry">
-            <div class="log-meta animate-line">
-[pending] tag=<span class="ansi-yellow">launch</span> level=<span class="ansi-yellow">waiting</span>
-            </div>
-            <div class="log-body line animate-line">
-&gt; contract_not_initiated. network scanning for optimal launch window. follow X and Telegram for the real address.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FAQ -->
-      <div class="section-block" id="faq">
-        <div class="section-title-line line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">cat /faq</span>
-        </div>
-
-        <div class="faq-grid">
-          <div class="faq-item">
-            <div class="faq-q animate-line">is the token live</div>
-            <div class="faq-a animate-line">
-&gt; not yet. when it is live, the real contract address will be displayed here and on the 404CAT X profile. if it is not in both places, it is not the real one.
-            </div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q animate-line">what about utilities</div>
-            <div class="faq-a animate-line">
-&gt; utilities are already in progress. the first one opens shortly after launch and more arrive as they are tested and hardened. no giant promises, just builds.
-            </div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q animate-line">why token first</div>
-            <div class="faq-a animate-line">
-&gt; the token is the identity anchor. once it exists and is verified, utilities can plug into it cleanly and the rest of the stack can grow without confusion.
-            </div>
-          </div>
-          <div class="faq-item">
-            <div class="faq-q animate-line">where do i stay updated</div>
-            <div class="faq-a animate-line">
-&gt; main signal routes are X and Telegram:
-&gt; - X: @404CATsolana
-&gt; - TG: t.me/cat_not_found
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- OUTRO -->
-      <div class="section-block">
-        <div class="line animate-line type-cmd">
-          <span class="prompt">sol@node:~$ </span><span class="cmd">echo "stay synced. real address and utilities announced live."</span>
-        </div>
-        <div class="line">
-          <span class="prompt">sol@node:~$ </span><span class="cursor"></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</main>
-
-<footer>
-  <div class="footer-inner">
-    <div>© <span id="year"></span> 404CAT. contract_not_initiated. terminal cat for solana devs and degens.</div>
-    <div class="footer-links">
-      <a href="https://x.com/404CATsolana" target="_blank" rel="noopener">X / Twitter</a>
-      <a href="https://t.me/cat_not_found" target="_blank" rel="noopener">Telegram</a>
-      <a href="#logs">logs</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-  // footer year
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  // TYPEWRITER WITH SCROLL-SPEED INFLUENCE
-  (function () {
-    const lines = Array.from(document.querySelectorAll(".animate-line"));
-    if (!lines.length) return;
-
-    let currentSpeed = 26; // ms between chars (baseline)
-    let lastScrollY = window.scrollY;
-
-    window.addEventListener("scroll", () => {
-      const y = window.scrollY;
-      const dy = Math.abs(y - lastScrollY);
-      lastScrollY = y;
-      // Map scroll delta to speed (faster scroll => smaller delay)
-      const fast = 14;
-      const slow = 55;
-      const factor = Math.max(0, Math.min(dy / 80, 1)); // 0..1
-      currentSpeed = slow - (slow - fast) * factor;
-    });
-
-    const items = lines.map((line) => {
-      const isCmd = line.classList.contains("type-cmd");
-      let full, promptSpan, cmdSpan, promptLen, target;
-
-      if (isCmd) {
-        promptSpan = line.querySelector(".prompt");
-        cmdSpan = line.querySelector(".cmd");
-        const promptText = promptSpan ? promptSpan.textContent : "";
-        const cmdText = cmdSpan ? cmdSpan.textContent : "";
-        full = (promptText + cmdText).replace(/^\s+/, "");
-        promptLen = promptText.length;
-        if (promptSpan) promptSpan.textContent = "";
-        if (cmdSpan) cmdSpan.textContent = "";
-      } else {
-        target = line.querySelector(".cmd");
-        if (target) {
-          full = target.textContent.replace(/^\s+/, "");
-          target.textContent = "";
-        } else {
-          const raw = line.textContent;
-          full = raw.replace(/^\s+/, "");
-          line.textContent = "";
-          target = document.createElement("span");
-          target.className = "type-text";
-          target.textContent = "";
-          line.appendChild(target);
-        }
-      }
-
-      return {
-        line,
-        isCmd,
-        promptSpan,
-        cmdSpan,
-        promptLen,
-        target,
-        fullText: full,
-        index: 0,
-        typing: false,
-        done: false,
-        visible: false,
-      };
-    });
-
-    let active = null;
-
-    function startTyping(item) {
-      if (!item || item.typing || item.done) return;
-      active = item;
-      item.typing = true;
-      item.index = 0;
-
-      const step = () => {
-        if (!item.typing) return;
-        item.index++;
-        const slice = item.fullText.slice(0, item.index);
-
-        if (item.isCmd) {
-          const promptLen = item.promptLen || 0;
-          const promptText = slice.slice(0, promptLen);
-          const cmdText = slice.slice(promptLen);
-          if (item.promptSpan) item.promptSpan.textContent = promptText;
-          if (item.cmdSpan) item.cmdSpan.textContent = cmdText;
-        } else if (item.target) {
-          item.target.textContent = slice;
-        }
-
-        if (item.index >= item.fullText.length) {
-          item.typing = false;
-          item.done = true;
-          active = null;
-          scheduleNext();
-        } else {
-          setTimeout(step, currentSpeed);
-        }
-      };
-
-      setTimeout(step, currentSpeed);
-    }
-
-    function scheduleNext() {
-      if (active) return;
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        if (it.visible && !it.done && !it.typing) {
-          it.line.classList.add("visible");
-          startTyping(it);
-          break;
-        }
-      }
-    }
-
-    if (!("IntersectionObserver" in window)) {
-      items.forEach((it) => {
-        it.visible = true;
-        it.line.classList.add("visible");
+    if (liveInput) {
+      liveInput.addEventListener('focus', () => {
+        liveCursor.style.display = 'inline-block';
       });
-      scheduleNext();
-      return;
+      liveInput.addEventListener('blur', () => {
+        liveCursor.style.display = 'inline-block';
+      });
+
+      // keep cursor at end visually by scrolling input
+      liveInput.addEventListener('input', () => {
+        liveInput.scrollLeft = liveInput.scrollWidth;
+      });
+
+      // focus on load
+      setTimeout(() => liveInput.focus(), 300);
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const idx = lines.indexOf(entry.target);
-          if (idx === -1) return;
-          const it = items[idx];
-          it.visible = entry.isIntersecting && entry.intersectionRatio >= 0.7;
-          if (it.visible) {
-            it.line.classList.add("visible");
-          }
+    // simple per-character typewriter for lines in DOM order
+    const lines = Array.from(document.querySelectorAll('.typed-line'));
+    const lineStates = new Map(); // {index: {fullText, current, typing}}
+
+    lines.forEach((line, idx) => {
+      lineStates.set(idx, {
+        fullText: line.textContent,
+        current: 0,
+        typing: false
+      });
+      line.textContent = '';
+    });
+
+    function typeLine(idx, cb) {
+      const state = lineStates.get(idx);
+      const line = lines[idx];
+      if (!state || !line) return;
+      if (state.typing) return;
+      state.typing = true;
+
+      function step() {
+        if (state.current >= state.fullText.length) {
+          line.classList.add('typed-complete');
+          state.typing = false;
+          cb && cb();
+          return;
+        }
+        state.current += 1;
+        line.textContent = state.fullText.slice(0, state.current);
+        line.classList.add('typed-complete');
+        setTimeout(step, 22); // natural-ish speed
+      }
+
+      step();
+    }
+
+    // type in DOM order as soon as page loads (no scroll gating in this version)
+    (function runTypewriter() {
+      let i = 0;
+      function next() {
+        if (i >= lines.length) return;
+        typeLine(i, () => {
+          i++;
+          next();
         });
-        scheduleNext();
-      },
-      {
-        threshold: 0.7,
-        rootMargin: "0px 0px -15% 0px",
       }
-    );
-
-    lines.forEach((line) => observer.observe(line));
-  })();
-
-  // INTERACTIVE CLI
-  (function () {
-    const cliEcho = document.getElementById("cli-echo");
-    const cliOutput = document.getElementById("cli-output");
-    const cliLine = document.getElementById("cli-line");
-
-    function setOutput(text) {
-      cliOutput.textContent = text ? "> " + text : "";
-    }
-
-    function jumpTo(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function handleCommand(raw) {
-      const cmd = raw.trim();
-      if (!cmd) {
-        setOutput("");
-        return;
-      }
-
-      if (cmd === "help" || cmd === "?") {
-        setOutput(
-          "available: help, links, about, token, utility, roadmap, faq, logs, clear, theme vintage, theme modern"
-        );
-        return;
-      }
-
-      if (cmd === "links") {
-        setOutput("X: @404CATsolana | TG: t.me/cat_not_found");
-        return;
-      }
-
-      if (cmd === "about") {
-        jumpTo("about");
-        setOutput("jumped to /about");
-        return;
-      }
-
-      if (cmd === "token") {
-        jumpTo("token");
-        setOutput("jumped to /token_plan");
-        return;
-      }
-
-      if (cmd === "utility") {
-        jumpTo("utility");
-        setOutput("jumped to /utility_stack");
-        return;
-      }
-
-      if (cmd === "roadmap") {
-        jumpTo("roadmap");
-        setOutput("jumped to /roadmap");
-        return;
-      }
-
-      if (cmd === "faq") {
-        jumpTo("faq");
-        setOutput("jumped to /faq");
-        return;
-      }
-
-      if (cmd === "logs") {
-        jumpTo("logs");
-        setOutput("jumped to /var/log/404cat.log");
-        return;
-      }
-
-      if (cmd === "clear") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        setOutput("screen cleared (scroll reset)");
-        return;
-      }
-
-      if (cmd === "theme vintage") {
-        document.body.classList.add("theme-vintage");
-        setOutput("theme set to vintage_crt");
-        return;
-      }
-
-      if (cmd === "theme modern") {
-        document.body.classList.remove("theme-vintage");
-        setOutput("theme set to modern_dark");
-        return;
-      }
-
-      setOutput("command not found: " + cmd);
-    }
-
-    cliEcho.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        const cmd = cliEcho.textContent;
-        cliEcho.textContent = "";
-        handleCommand(cmd);
-      }
-    });
-
-    cliLine.addEventListener("click", () => {
-      cliEcho.focus();
-    });
-
-    window.addEventListener("load", () => {
-      cliEcho.focus();
-    });
-  })();
-</script>
+      next();
+    })();
+  </script>
 </body>
 </html>
