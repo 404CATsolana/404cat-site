@@ -836,7 +836,7 @@ sol@node:~$ cat contract.cfg
 
       // stronger scroll influence: small scrolls already noticeably speed it up
       const fast = 8;   // ms per char when scrolling fast
-      const slow = 35;  // ms per char when barely scrolling
+      const slow = 24;  // ms per char when barely scrolling
       const factor = Math.max(0, Math.min(dy / 40, 1)); // 0..1
       currentSpeed = slow - (slow - fast) * factor;
     });
