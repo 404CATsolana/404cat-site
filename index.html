@@ -316,7 +316,8 @@
       color: var(--accent-2);
     }
 
-    /* Live CLI */
+    /* Live CLI + cursors */
+
     .live-cli {
       margin: 4px 0 2px;
       display: flex;
@@ -324,24 +325,37 @@
       gap: 4px;
     }
 
-    .live-input {
+    .live-input-wrapper {
+      position: relative;
       flex: 1;
       min-height: 1em;
+    }
+
+    .live-input {
       outline: none;
       border: none;
       background: transparent;
       color: var(--text);
       font: inherit;
+      white-space: pre;
       caret-color: transparent; /* we draw our own block cursor */
     }
 
-    .cursor {
-      display: inline-block;
-      width: 7px;
+    .cursor-block {
+      width: 0.6ch;
       height: 1.1em;
       background: var(--accent);
-      margin-left: 1px;
       animation: blink 1s steps(1, start) infinite;
+    }
+
+    .cursor-live {
+      position: absolute;
+      top: 0;
+    }
+
+    .cursor-inline {
+      display: inline-block;
+      margin-left: 2px;
       vertical-align: bottom;
     }
 
@@ -369,7 +383,7 @@
   <div class="shell">
     <div class="top-bar">
       <div class="top-icon">
-        <!-- use your transparent 404CAT logo here -->
+        <!-- replace with your actual logo path -->
         <img src="404cat-logo.png" alt="404CAT logo" />
       </div>
       <div class="top-title">
@@ -395,10 +409,12 @@
         </div>
 
         <!-- live CLI -->
-        <div class="live-cli">
+        <div class="live-cli" id="liveCli">
           <span class="prompt">sol@node:~$</span>
-          <div class="live-input" id="liveInput" contenteditable="true" spellcheck="false"></div>
-          <span class="cursor" id="liveCursor"></span>
+          <div class="live-input-wrapper">
+            <div class="live-input" id="liveInput" contenteditable="true" spellcheck="false"></div>
+            <span class="cursor-block cursor-live" id="liveCursor"></span>
+          </div>
         </div>
 
         <div class="section-divider"></div>
@@ -690,7 +706,7 @@
         </div>
 
         <div class="term-line" style="margin-top:6px;">
-<span class="prompt">sol@node:~$</span>
+<span class="prompt">sol@node:~$</span><span class="cursor-block cursor-inline" id="bottomCursor"></span>
         </div>
 
         <!-- footer -->
@@ -706,22 +722,30 @@
   </div>
 
   <script>
-    // Single block cursor, no duplicate caret
+    // Live CLI cursor logic: keep block cursor directly after text
     const liveInput = document.getElementById('liveInput');
     const liveCursor = document.getElementById('liveCursor');
 
-    if (liveInput) {
-      liveInput.addEventListener('focus', () => {
-        liveCursor.style.display = 'inline-block';
-      });
-      liveInput.addEventListener('blur', () => {
-        liveCursor.style.display = 'inline-block';
-      });
-      liveInput.addEventListener('input', () => {
-        liveInput.scrollLeft = liveInput.scrollWidth;
-      });
+    function updateLiveCursor() {
+      if (!liveInput || !liveCursor) return;
+      const text = liveInput.textContent || "";
+      const len = text.length;
+      liveCursor.style.left = len + "ch";
+    }
 
-      setTimeout(() => liveInput.focus(), 300);
+    if (liveInput && liveCursor) {
+      liveInput.addEventListener('input', updateLiveCursor);
+      liveInput.addEventListener('keyup', updateLiveCursor);
+      liveInput.addEventListener('click', updateLiveCursor);
+      window.addEventListener('resize', updateLiveCursor);
+
+      liveInput.addEventListener('focus', updateLiveCursor);
+
+      // Initial focus & placement
+      setTimeout(() => {
+        liveInput.focus();
+        updateLiveCursor();
+      }, 300);
     }
   </script>
 </body>
