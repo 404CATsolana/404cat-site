@@ -8,14 +8,13 @@
     :root {
       --bg: #020617;
       --bg-terminal: #020617;
-      --bg-window: #020617;
       --border-window: #111827;
       --text: #e5e7eb;
       --text-dim: #9ca3af;
       --accent: #22c55e;
       --accent-2: #38bdf8;
       --warn: #facc15;
-      --error: #f97373;
+      --error: #fb7185;
       --tag-bg: rgba(15, 23, 42, 0.96);
       --tag-border: rgba(31, 41, 55, 1);
       --radius: 8px;
@@ -33,7 +32,7 @@
     }
 
     body {
-      background: radial-gradient(circle at top, #020617 0, #020617 35%, #020617 100%);
+      background: #020617;
       color: var(--text);
       font-family: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
       -webkit-font-smoothing: antialiased;
@@ -86,7 +85,7 @@
     .terminal-window {
       border-radius: var(--radius);
       border: 1px solid var(--border-window);
-      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #020617 100%);
+      background: #020617;
       overflow: hidden;
       box-shadow:
         0 0 0 1px rgba(15, 23, 42, 0.85),
@@ -96,7 +95,7 @@
     .terminal-header {
       height: 26px;
       border-bottom: 1px solid rgba(15, 23, 42, 1);
-      background: linear-gradient(to bottom, #020617, #020617);
+      background: #020617;
       display: flex;
       align-items: center;
       padding: 0 8px;
@@ -126,7 +125,7 @@
 
     .terminal-body {
       background: var(--bg-terminal);
-      padding: 10px 10px 12px 10px; /* hard-left padding */
+      padding: 10px 10px 12px 10px; /* hard-left */
       font-size: 12px;
       line-height: 1.5;
       text-align: left;
@@ -138,37 +137,8 @@
       font-variant-ligatures: none;
     }
 
-    .prompt-line,
-    .cli-line {
+    .prompt {
       color: var(--accent);
-    }
-
-    .prompt-label {
-      color: var(--accent);
-    }
-
-    .prompt-command {
-      color: var(--text);
-    }
-
-    .output-line {
-      color: var(--text);
-    }
-
-    .output-label {
-      color: var(--text-dim);
-    }
-
-    .output-value-ok {
-      color: var(--accent);
-    }
-
-    .output-value-warn {
-      color: var(--warn);
-    }
-
-    .output-value-error {
-      color: var(--error);
     }
 
     .hint-line {
@@ -189,17 +159,11 @@
       margin-bottom: 10px;
     }
 
-    /* Hard-left alignment for all section command lines */
-    .section-command-line {
-      margin-left: 0;
-      padding-left: 0;
-    }
-
     .box {
       border-radius: var(--radius-sm);
       border: 1px solid rgba(31, 41, 55, 0.95);
       background: rgba(15, 23, 42, 0.96);
-      padding: 6px 10px 4px 10px; /* align to same left as terminal-body */
+      padding: 6px 10px 4px 10px; /* same left as body */
       margin-top: 4px;
     }
 
@@ -212,6 +176,7 @@
     .kv-row {
       display: flex;
       gap: 10px;
+      margin-bottom: 2px;
     }
 
     .kv-label {
@@ -221,6 +186,18 @@
 
     .kv-value {
       flex: 1;
+    }
+
+    .output-value-ok {
+      color: var(--accent);
+    }
+
+    .output-value-warn {
+      color: var(--warn);
+    }
+
+    .output-value-error {
+      color: var(--error);
     }
 
     .list-block {
@@ -256,7 +233,7 @@
       margin-top: 6px;
       border-radius: var(--radius-sm);
       border: 1px solid rgba(31, 41, 55, 0.9);
-      padding: 4px 10px 4px 10px; /* align left */
+      padding: 4px 10px 4px 10px;
       font-size: 11px;
     }
 
@@ -291,7 +268,7 @@
     .faq-item {
       border-radius: var(--radius-sm);
       border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 4px 10px 4px 10px; /* align left */
+      padding: 4px 10px 4px 10px;
       background: rgba(15, 23, 42, 0.96);
       font-size: 11px;
       margin-bottom: 5px;
@@ -341,14 +318,10 @@
 
     /* Live CLI */
     .live-cli {
-      margin: 6px 0 2px;
+      margin: 4px 0 2px;
       display: flex;
       align-items: center;
       gap: 4px;
-    }
-
-    .live-prompt {
-      color: var(--accent);
     }
 
     .live-input {
@@ -377,15 +350,6 @@
       50.01%, 100% { opacity: 0; }
     }
 
-    /* Typewriter */
-    .typed-line {
-      opacity: 0.1;
-    }
-
-    .typed-line.typed-complete {
-      opacity: 1;
-    }
-
     @media (max-width: 640px) {
       body {
         padding: 8px 4px 18px;
@@ -405,8 +369,8 @@
   <div class="shell">
     <div class="top-bar">
       <div class="top-icon">
-        <!-- Use your transparent 404CAT logo here -->
-        <img src="404cat-logo.png" alt="404CAT" />
+        <!-- use your transparent 404CAT logo here -->
+        <img src="404cat-logo.png" alt="404CAT logo" />
       </div>
       <div class="top-title">
         <div class="top-title-main">404CAT</div>
@@ -418,8 +382,8 @@
       <div class="terminal-header">
         <div class="header-dots">
           <div class="dot red"></div>
-          <div class="dot yellow"></div}
-          ><div class="dot green"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
         </div>
         <div class="header-title">sol@node:~$ 404cat.meme</div>
       </div>
@@ -427,12 +391,12 @@
       <div class="terminal-body">
         <!-- hint -->
         <div class="term-line hint-line">
-          &gt; cli_hint = type <span class="cmd">help</span> for commands (about, token, utility, roadmap, faq, logs, links, clear)
+&gt; cli_hint = type <span class="cmd">help</span> for commands (about, token, utility, roadmap, faq, logs, links)
         </div>
 
-        <!-- live CLI, aligned hard-left -->
+        <!-- live CLI -->
         <div class="live-cli">
-          <span class="live-prompt">sol@node:~$</span>
+          <span class="prompt">sol@node:~$</span>
           <div class="live-input" id="liveInput" contenteditable="true" spellcheck="false"></div>
           <span class="cursor" id="liveCursor"></span>
         </div>
@@ -441,8 +405,9 @@
 
         <!-- /sys/status -->
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="1">
-sol@node:~$ cat /sys/status</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> cat /sys/status
+          </div>
 
           <div class="box">
             <div class="kv-row">
@@ -470,8 +435,9 @@ sol@node:~$ cat /sys/status</div>
 
         <!-- sys.ping -->
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="2">
-sol@node:~$ sys.ping 404cat</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> sys.ping 404cat
+          </div>
 
           <div class="box">
             <div class="kv-row">
@@ -495,12 +461,13 @@ sol@node:~$ sys.ping 404cat</div>
 
         <!-- echo intro -->
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="3">
-sol@node:~$ echo "404: cat_not_found, operator located"</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> echo "404: cat_not_found, operator located"
+          </div>
 
           <div class="box">
-            <div class="term-line list-line">
-              404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.
+            <div class="list-block">
+              <div class="list-line">404CAT is a Solana-native meme and tool stack for devs and degens who treat the network like a terminal.</div>
             </div>
           </div>
         </div>
@@ -509,8 +476,9 @@ sol@node:~$ echo "404: cat_not_found, operator located"</div>
         <div class="section-divider"></div>
 
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="4">
-sol@node:~$ cat /about</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> cat /about
+          </div>
 
           <div class="box">
             <div class="box-title">&gt; description:</div>
@@ -543,8 +511,9 @@ sol@node:~$ cat /about</div>
         <div class="section-divider"></div>
 
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="5">
-sol@node:~$ cat /token_plan</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> cat /token_plan
+          </div>
 
           <div class="box">
             <div class="box-title">&gt; status = prelaunch</div>
@@ -580,8 +549,9 @@ sol@node:~$ cat /token_plan</div>
         <div class="section-divider"></div>
 
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="6">
-sol@node:~$ cat /utility_stack</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> cat /utility_stack
+          </div>
 
           <div class="box">
             <div class="box-title">&gt; policy:</div>
@@ -610,8 +580,9 @@ sol@node:~$ cat /utility_stack</div>
         <div class="section-divider"></div>
 
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="7">
-sol@node:~$ cat /roadmap</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> cat /roadmap
+          </div>
 
           <div class="box">
             <div class="box-title">&gt; near_term:</div>
@@ -638,8 +609,9 @@ sol@node:~$ cat /roadmap</div>
         <div class="section-divider"></div>
 
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="8">
-sol@node:~$ tail -n 3 /var/log/404cat.log</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> tail -n 3 /var/log/404cat.log
+          </div>
 
           <div class="logs">
             <div class="log-row">
@@ -673,8 +645,9 @@ sol@node:~$ tail -n 3 /var/log/404cat.log</div>
         <div class="section-divider"></div>
 
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="9">
-sol@node:~$ cat /faq</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> cat /faq
+          </div>
 
           <div class="faq">
             <div class="faq-item">
@@ -709,15 +682,16 @@ sol@node:~$ cat /faq</div>
           </div>
         </div>
 
-        <!-- closing echo -->
+        <!-- closing echo + bottom prompt -->
         <div class="section-block">
-          <div class="term-line prompt-line section-command-line typed-line" data-typed-order="10">
-sol@node:~$ echo "stay synced. real address and utilities announced live."</div>
+          <div class="term-line">
+<span class="prompt">sol@node:~$</span> echo "stay synced. real address and utilities announced live."
+          </div>
         </div>
 
-        <!-- pseudo bottom prompt -->
-        <div class="term-line prompt-line" style="margin-top:6px;">
-sol@node:~$</div>
+        <div class="term-line" style="margin-top:6px;">
+<span class="prompt">sol@node:~$</span>
+        </div>
 
         <!-- footer -->
         <div class="footer">
@@ -732,7 +706,7 @@ sol@node:~$</div>
   </div>
 
   <script>
-    // single block cursor focus handling (no double cursors)
+    // Single block cursor, no duplicate caret
     const liveInput = document.getElementById('liveInput');
     const liveCursor = document.getElementById('liveCursor');
 
@@ -743,64 +717,12 @@ sol@node:~$</div>
       liveInput.addEventListener('blur', () => {
         liveCursor.style.display = 'inline-block';
       });
-
-      // keep cursor at end visually by scrolling input
       liveInput.addEventListener('input', () => {
         liveInput.scrollLeft = liveInput.scrollWidth;
       });
 
-      // focus on load
       setTimeout(() => liveInput.focus(), 300);
     }
-
-    // simple per-character typewriter for lines in DOM order
-    const lines = Array.from(document.querySelectorAll('.typed-line'));
-    const lineStates = new Map(); // {index: {fullText, current, typing}}
-
-    lines.forEach((line, idx) => {
-      lineStates.set(idx, {
-        fullText: line.textContent,
-        current: 0,
-        typing: false
-      });
-      line.textContent = '';
-    });
-
-    function typeLine(idx, cb) {
-      const state = lineStates.get(idx);
-      const line = lines[idx];
-      if (!state || !line) return;
-      if (state.typing) return;
-      state.typing = true;
-
-      function step() {
-        if (state.current >= state.fullText.length) {
-          line.classList.add('typed-complete');
-          state.typing = false;
-          cb && cb();
-          return;
-        }
-        state.current += 1;
-        line.textContent = state.fullText.slice(0, state.current);
-        line.classList.add('typed-complete');
-        setTimeout(step, 22); // natural-ish speed
-      }
-
-      step();
-    }
-
-    // type in DOM order as soon as page loads (no scroll gating in this version)
-    (function runTypewriter() {
-      let i = 0;
-      function next() {
-        if (i >= lines.length) return;
-        typeLine(i, () => {
-          i++;
-          next();
-        });
-      }
-      next();
-    })();
   </script>
 </body>
 </html>
